@@ -144,9 +144,6 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.7)
-    rubocop-rails (2.0.0)
-      rack (>= 2.0)
-      rubocop (>= 0.70.0)
     rubocop-rspec (1.33.0)
       rubocop (>= 0.60.0)
     ruby-progressbar (1.10.1)
@@ -187,7 +184,6 @@ DEPENDENCIES
   rails (~> 5.2.3)
   rspec-rails
   rubocop
-  rubocop-rails
   rubocop-rspec
   spring
   spring-watcher-listen (~> 2.0.0)
