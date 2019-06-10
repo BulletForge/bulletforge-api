@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class AddEngineIdToProjects < ActiveRecord::Migration
   def self.up
     remove_column :projects, :category
     remove_column :projects, :engine
-    add_column :projects, :engine_id, :integer, :default => 1
+    add_column :projects, :engine_id, :integer, default: 1
   end
 
   def self.down

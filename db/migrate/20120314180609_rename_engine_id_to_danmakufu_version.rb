@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameEngineIdToDanmakufuVersion < ActiveRecord::Migration
   def self.up
     rename_column :projects, :engine_id, :danmakufu_version_id

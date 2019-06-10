@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddPermalinkColumns < ActiveRecord::Migration
   def self.up
     add_column :users, :permalink, :string

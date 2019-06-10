@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddIpAddressToUsers < ActiveRecord::Migration
   def self.up
     add_column :users, :ip_address, :string

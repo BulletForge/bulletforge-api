@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChangeContentInCommentsToText < ActiveRecord::Migration
   def self.up
     remove_column :comments, :content

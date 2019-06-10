@@ -3,6 +3,11 @@ require: rubocop-rspec
 AllCops:
   Exclude:
     - bin/**/*
+    - db/schema.rb
+    - db/migrate/*
 
 Style/Documentation:
   Enabled: false
+
+Metrics/MethodLength:
+  Max: 15

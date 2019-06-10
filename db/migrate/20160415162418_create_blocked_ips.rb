@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateBlockedIps < ActiveRecord::Migration
   def self.up
     create_table :blocked_ips do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTypeToAssets < ActiveRecord::Migration
   def self.up
     add_column :assets, :type, :string

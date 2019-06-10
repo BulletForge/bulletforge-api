@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddPasswordTokenAndPasswordTokenExpirationToUsers < ActiveRecord::Migration
   def self.up
     add_column :users, :password_token, :string

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveComments < ActiveRecord::Migration
   def self.up
     drop_table :comments

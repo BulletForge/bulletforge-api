@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class AddTakedownColumnsToProjects < ActiveRecord::Migration
   def self.up
-    add_column :projects, :soft_deleted, :boolean, :default => false
+    add_column :projects, :soft_deleted, :boolean, default: false
     add_column :projects, :deleted_reason, :string
   end
 

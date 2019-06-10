@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module Types
   class UserType < Types::BaseObject
     field :id, ID, null: false
-    field :permalink, String, null: true
     field :email, String, null: true
     field :login, String, null: true
     field :projects, [Types::ProjectType], null: true
@@ -9,6 +10,10 @@ module Types
 
     def projects_count
       projects.size
+    end
+
+    def id
+      object.to_param
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateVersions < ActiveRecord::Migration
   def self.up
     create_table :versions do |t|
@@ -10,7 +12,7 @@ class CreateVersions < ActiveRecord::Migration
       t.string   :script_bundle_content_type
       t.integer  :script_bundle_file_size
       t.datetime :script_bundle_updated_at
-      
+
       t.timestamps
     end
     remove_column :projects, :description

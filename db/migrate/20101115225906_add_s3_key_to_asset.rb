@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddS3KeyToAsset < ActiveRecord::Migration
   def self.up
     add_column :assets, :s3_key, :string

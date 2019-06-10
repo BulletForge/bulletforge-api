@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class QueryType < Types::BaseObject
     field :users, [Types::UserType], null: false
@@ -7,11 +9,11 @@ module Types
     end
 
     field :user, Types::UserType, null: false do
-      argument :permalink, String, required: true
+      argument :id, String, required: true
     end
 
-    def user(permalink:)
-      User.find_by_permalink(permalink)
+    def user(id:)
+      User.find_by_permalink(id)
     end
 
     field :projects, [Types::ProjectType], null: false

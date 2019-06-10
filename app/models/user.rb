@@ -27,4 +27,8 @@ class User < ApplicationRecord
     errors.add(:login, 'Username is in use by another account.') if
       user_with_permalink && user_with_permalink != self
   end
+
+  def to_param
+    permalink
+  end
 end
