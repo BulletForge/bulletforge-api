@@ -7,7 +7,6 @@ ruby '2.6.3'
 
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise'
-gem 'devise-jwt'
 gem 'friendly_id'
 gem 'graphql'
 gem 'pg'

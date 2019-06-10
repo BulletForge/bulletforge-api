@@ -2,6 +2,7 @@
 
 class User < ApplicationRecord
   extend FriendlyId
+
   friendly_id :login, use: :slugged, slug_column: :permalink
 
   devise :database_authenticatable,
