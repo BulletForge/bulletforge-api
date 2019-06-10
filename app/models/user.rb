@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  devise :database_authenticatable, :registerable, :confirmable, :trackable,
+         :recoverable, :rememberable, :validatable
+
   has_many :projects, dependent: :destroy
 
   # has_permalink :login, :update => true, :unique => false
