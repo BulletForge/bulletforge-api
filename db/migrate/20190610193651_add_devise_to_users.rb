@@ -33,9 +33,9 @@ class AddDeviseToUsers < ActiveRecord::Migration[5.2]
   end
 
   def self.down
-    remove_index :users, :email,                unique: true
-    remove_index :users, :reset_password_token, unique: true
-    remove_index :users, :confirmation_token,   unique: true
+    remove_index :users, :email
+    remove_index :users, :reset_password_token
+    remove_index :users, :confirmation_token
 
     change_table :users do |t|
       t.remove :encrypted_password, :reset_password_token, :reset_password_sent_at,

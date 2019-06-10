@@ -95,7 +95,6 @@ ActiveRecord::Schema.define(version: 2019_06_10_193651) do
     t.string "password_token", limit: 255
     t.datetime "password_token_expiration"
     t.boolean "suspicious", default: false
-    t.string "password_digest", limit: 255
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
