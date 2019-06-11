@@ -2,19 +2,17 @@
 
 class GraphqlController < ApplicationController
   def execute
-    variables = ensure_hash(params[:variables])
-    query = params[:query]
-    operation_name = params[:operationName]
     context = {
-      # Query context goes here, for example:
-      # current_user: current_user,
+      current_user: find_current_user
     }
+
     result = BulletforgeApiSchema.execute(
-      query,
-      variables: variables,
+      params[:query],
+      variables: ensure_hash(params[:variables]),
       context: context,
-      operation_name: operation_name
+      operation_name: params[:operationName]
     )
+
     render json: result
   rescue StandardError => e
     raise e unless Rails.env.development?
@@ -23,6 +21,21 @@ class GraphqlController < ApplicationController
   end
 
   private
+
+  # Devise provides current_user already, but doesn't recognize JWTs.
+  # We can't use devise-jwt since there doesn't appear to be a way to
+  # ask it to generate a token for us outside of logging in through
+  # the Devise routes.
+  def find_current_user
+    auth_header = request.headers['Authorization']
+    auth_header ||= request.cookies['_auth'] if Rails.env.development? # Dumb hack for graphiql-rails
+    return unless auth_header
+
+    auth_token = auth_header.split(' ').last
+    decoded_json = JsonWebToken.decode(auth_token)
+
+    User.find(decoded_json[:user_id]) if decoded_json
+  end
 
   # Handle form data, JSON body, or a blank value
   def ensure_hash(ambiguous_param)

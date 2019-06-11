@@ -7,7 +7,7 @@ module Mutations
     argument :login, String, required: true
     argument :password, String, required: true
 
-    field :user, Types::UserType, null: true
+    field :token, String, null: true
     field :errors, [String], null: false
 
     def resolve(login:, password:)
@@ -19,10 +19,10 @@ module Mutations
       end
 
       if is_valid_for_auth
-        # TODO: Actually provide a token or something
-        { user: user, errors: [] }
+        token = JsonWebToken.encode(user_id: user.id)
+        { token: token, errors: [] }
       else
-        { user: nil, errors: ['Invalid username or password.'] }
+        { token: nil, errors: ['Invalid username or password.'] }
       end
     end
   end

@@ -7,5 +7,6 @@ module Types
 
     # User Sessions
     field :login, mutation: Mutations::Login
+    field :token_login, mutation: Mutations::TokenLogin
   end
 end
