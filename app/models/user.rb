@@ -11,9 +11,7 @@ class User < ApplicationRecord
          :trackable,
          :recoverable,
          :rememberable,
-         :validatable,
-         :jwt_authenticatable,
-         jwt_revocation_strategy: self
+         :validatable
 
   has_many :projects, dependent: :destroy
 
