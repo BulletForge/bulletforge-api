@@ -8,22 +8,15 @@ module Mutations
     argument :password, String, required: true
 
     field :token, String, null: true
-    field :errors, [String], null: false
 
     def resolve(login:, password:)
       user = User.find_for_authentication(login: login)
-      return nil unless user
-
-      is_valid_for_auth = user.valid_for_authentication? do
+      is_valid_for_auth = user&.valid_for_authentication? do
         user.valid_password?(password)
       end
+      raise GraphQL::ExecutionError, 'Invalid username/password combination' unless is_valid_for_auth
 
-      if is_valid_for_auth
-        token = JsonWebToken.encode(user_id: user.id)
-        { token: token, errors: [] }
-      else
-        { token: nil, errors: ['Invalid username or password.'] }
-      end
+      { token: JsonWebToken.encode(user_id: user.id) }
     end
   end
 end

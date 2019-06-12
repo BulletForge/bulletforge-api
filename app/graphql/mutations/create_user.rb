@@ -10,21 +10,16 @@ module Mutations
     argument :passwordConfirmation, String, required: true
 
     field :user, Types::UserType, null: true
-    field :errors, [String], null: false
 
     def resolve(login:, email:, password:, password_confirmation:)
-      user = User.new(
+      User.create!(
         login: login,
         email: email,
         password: password,
         password_confirmation: password_confirmation
       )
-
-      if user.save
-        { user: user, errors: [] }
-      else
-        { user: nil, errors: user.errors.full_messages }
-      end
+    rescue ActiveRecord::RecordInvalid => e
+      raise GraphQL::ExecutionError, e.message
     end
   end
 end

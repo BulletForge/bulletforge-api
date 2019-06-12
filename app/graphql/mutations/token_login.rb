@@ -5,12 +5,9 @@ module Mutations
     null true
 
     field :user, Types::UserType, null: true
-    field :errors, [String], null: false
 
     def resolve
-      {
-        user: context[:current_user]
-      }
+      context[:current_user]
     end
   end
 end
