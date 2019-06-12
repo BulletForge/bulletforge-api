@@ -2,7 +2,7 @@
 
 module Types
   class QueryType < Types::BaseObject
-    field :users, [Types::UserType], null: false
+    field :users, Types::UserType.connection_type, null: false
 
     def users
       User.all
@@ -13,10 +13,10 @@ module Types
     end
 
     def user(id:)
-      User.find_by_permalink(id)
+      User.friendly.find(id)
     end
 
-    field :projects, [Types::ProjectType], null: false
+    field :projects, Types::ProjectType.connection_type, null: false
 
     def projects
       Project.all
