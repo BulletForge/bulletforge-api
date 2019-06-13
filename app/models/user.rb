@@ -15,6 +15,7 @@ class User < ApplicationRecord
 
   validates :login, presence: true
   validates :password_confirmation, presence: true, on: :create
+  validates :email, uniqueness: true
 
   has_many :projects, dependent: :destroy
 

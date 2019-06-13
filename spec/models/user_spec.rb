@@ -3,6 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  ######
+  # Validations on save
+  ######
   context 'when validating on save' do
     let(:user) { build(:random_user) }
 
@@ -36,8 +39,23 @@ RSpec.describe User, type: :model do
       expect { user.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it 'saves successfully when validations pass' do
-      expect(user.save).to eq(true)
+    it 'ensures email is unique' do
+      user2 = build(:random_user)
+      user2.email = user.email
+      user.save!
+
+      expect { user2.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
+
+  ######
+  # Extra data populated on save
+  ######
+  context 'when successfully saved' do
+    let(:user) { create(:random_user) }
+
+    it 'creates a permalink' do
+      expect(user.permalink).not_to be_nil
     end
   end
 end
