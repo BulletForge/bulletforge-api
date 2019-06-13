@@ -38,7 +38,7 @@ RSpec.describe 'Create user mutation', type: :feature do
       end
 
       it 'returns the created user' do
-        expect(results['data']).not_to eq(nil)
+        expect(results['data']['createUser']['user']).not_to eq(nil)
       end
 
       it 'does not return errors' do
