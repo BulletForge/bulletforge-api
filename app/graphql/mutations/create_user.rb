@@ -12,12 +12,14 @@ module Mutations
     field :user, Types::UserType, null: true
 
     def resolve(login:, email:, password:, password_confirmation:)
-      User.create!(
+      user = User.create!(
         login: login,
         email: email,
         password: password,
         password_confirmation: password_confirmation
       )
+
+      { user: user }
     rescue ActiveRecord::RecordInvalid => e
       raise GraphQL::ExecutionError, e.message
     end

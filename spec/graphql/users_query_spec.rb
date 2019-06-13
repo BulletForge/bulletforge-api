@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'graphql_helper'
 
-RSpec.describe 'Root users field', type: :feature do
+RSpec.describe 'Users query', type: :feature do
   before do
     create_list :random_user, 10
   end

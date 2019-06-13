@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'graphql_helper'
 
-RSpec.describe 'Root user field', type: :feature do
+RSpec.describe 'User query', type: :feature do
   let(:graphql) { GraphqlHelper.new }
 
   describe 'when the user exists' do
@@ -30,7 +30,11 @@ RSpec.describe 'Root user field', type: :feature do
   describe 'when the user does not exist' do
     let(:result) { graphql.user(id: 'nonexistant') }
 
-    it 'returns an error field' do
+    it 'does not return data' do
+      expect(result['data']).to eq(nil)
+    end
+
+    it 'returns errors' do
       expect(result['errors']).not_to be_empty
     end
   end
