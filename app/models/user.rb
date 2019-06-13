@@ -13,13 +13,19 @@ class User < ApplicationRecord
          :rememberable,
          :validatable
 
-  validates :login, presence: true
-  validates :password_confirmation, presence: true, on: :create
-  validates :email, uniqueness: true
+  validates_presence_of :login
+  validates_uniqueness_of :login
+  validates_presence_of :password_confirmation, if: :password_present?
 
   has_many :projects, dependent: :destroy
 
   def to_param
     permalink
+  end
+
+  private
+
+  def password_present?
+    !password.nil?
   end
 end
