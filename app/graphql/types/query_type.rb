@@ -14,6 +14,8 @@ module Types
 
     def user(id:)
       User.friendly.find(id)
+    rescue ActiveRecord::RecordNotFound => e
+      raise GraphQL::ExecutionError, e.message
     end
 
     field :projects, Types::ProjectType.connection_type, null: false

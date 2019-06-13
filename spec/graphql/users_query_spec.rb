@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require 'graphql_helper'
 
-RSpec.describe 'Graphql root users field', type: :feature do
+RSpec.describe 'Root users field', type: :feature do
   before do
     create_list :random_user, 10
   end
@@ -11,16 +12,18 @@ RSpec.describe 'Graphql root users field', type: :feature do
     User.destroy_all
   end
 
-  describe 'when doing a query with no arguments' do
-    let(:result) { BulletforgeApiSchema.execute(users_query) }
+  let(:graphql) { GraphqlHelper.new }
+
+  describe 'with no arguments' do
+    let(:result) { graphql.users }
 
     it 'returns multiple users' do
       expect(result['data']['users']['edges'].count).to eq(10)
     end
   end
 
-  describe 'when doing a query with pagination arguments from the front' do
-    let(:page_result1) { BulletforgeApiSchema.execute users_query(first: 2) }
+  describe 'with pagination arguments from the front' do
+    let(:page_result1) { graphql.users(first: 2) }
 
     it 'understands first argument' do
       expect(page_result1['data']['users']['edges'].count).to eq(2)
@@ -30,15 +33,15 @@ RSpec.describe 'Graphql root users field', type: :feature do
       page_ids1 = page_result1['data']['users']['edges'].map { |user| user['node']['id'] }
       cursor = page_result1['data']['users']['edges'].last['cursor']
 
-      page_result2 = BulletforgeApiSchema.execute users_query(first: 2, after: cursor)
+      page_result2 = graphql.users(first: 2, after: cursor)
       page_ids2 = page_result2['data']['users']['edges'].map { |user| user['node']['id'] }
 
       expect(page_ids1 & page_ids2).to be_empty
     end
   end
 
-  describe 'when doing a query with pagination arguments from the back' do
-    let(:page_result1) { BulletforgeApiSchema.execute users_query(last: 2) }
+  describe 'with pagination arguments from the back' do
+    let(:page_result1) { graphql.users(last: 2) }
 
     it 'understands last argument' do
       expect(page_result1['data']['users']['edges'].count).to eq(2)
@@ -48,34 +51,10 @@ RSpec.describe 'Graphql root users field', type: :feature do
       page_ids1 = page_result1['data']['users']['edges'].map { |user| user['node']['id'] }
       cursor = page_result1['data']['users']['edges'].first['cursor']
 
-      page_result2 = BulletforgeApiSchema.execute users_query(last: 2, before: cursor)
+      page_result2 = graphql.users(last: 2, before: cursor)
       page_ids2 = page_result2['data']['users']['edges'].map { |user| user['node']['id'] }
 
       expect(page_ids1 & page_ids2).to be_empty
     end
-  end
-
-  def users_query(**args)
-    query = GQLi::DSL.query {
-      users(**args) {
-        edges {
-          cursor
-          node {
-            id
-            email
-            login
-            projects {
-              edges {
-                node {
-                  id
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    query.to_s
   end
 end

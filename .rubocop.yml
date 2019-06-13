@@ -12,7 +12,7 @@ Style/BlockComments:
 
 Style/BlockDelimiters:
   Exclude:
-    - spec/graphql/**/*
+    - spec/graphql_helper.rb
 
 Style/Documentation:
   Enabled: false
