@@ -7,7 +7,7 @@ RSpec.describe User, type: :model do
   # Validations on create
   ######
   context 'when validating on create' do
-    let(:user) { build(:random_user) }
+    let(:user) { build :random_user }
 
     it 'ensures login exists' do
       user.login = nil
@@ -40,7 +40,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'ensures login is unique' do
-      user2 = build(:random_user)
+      user2 = build :random_user
       user2.login = user.login
       user.save!
 
@@ -48,7 +48,7 @@ RSpec.describe User, type: :model do
     end
 
     it 'ensures email is unique' do
-      user2 = build(:random_user)
+      user2 = build :random_user
       user2.email = user.email
       user.save!
 
@@ -60,7 +60,7 @@ RSpec.describe User, type: :model do
   # Validations on update
   ######
   context 'when validating on update' do
-    let(:user) { create(:random_user) }
+    let(:user) { create :random_user }
 
     it 'ensures login exists' do
       user.login = nil
@@ -96,14 +96,14 @@ RSpec.describe User, type: :model do
     end
 
     it 'ensures login is unique' do
-      user2 = create(:random_user)
+      user2 = create :random_user
       user2.login = user.login
 
       expect { user2.save! }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it 'ensures email is unique' do
-      user2 = create(:random_user)
+      user2 = create :random_user
       user2.email = user.email
 
       expect { user2.save! }.to raise_error(ActiveRecord::RecordInvalid)
@@ -114,7 +114,7 @@ RSpec.describe User, type: :model do
   # Extra data populated on save
   ######
   context 'when successfully saved' do
-    let(:user) { create(:random_user) }
+    let(:user) { create :random_user }
 
     it 'creates a permalink' do
       expect(user.permalink).not_to be_nil
