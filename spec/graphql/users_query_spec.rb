@@ -19,14 +19,14 @@ RSpec.describe 'Graphql root users field', type: :feature do
     end
   end
 
-  describe 'when doing a query with pagination queries from the front' do
+  describe 'when doing a query with pagination arguments from the front' do
     let(:page_result1) { BulletforgeApiSchema.execute users_query(first: 2) }
 
-    it 'understands first param' do
+    it 'understands first argument' do
       expect(page_result1['data']['users']['edges'].count).to eq(2)
     end
 
-    it 'understands first and after params' do
+    it 'understands first and after arguments' do
       page_ids1 = page_result1['data']['users']['edges'].map { |user| user['node']['id'] }
       cursor = page_result1['data']['users']['edges'].last['cursor']
 
@@ -37,14 +37,14 @@ RSpec.describe 'Graphql root users field', type: :feature do
     end
   end
 
-  describe 'when doing a query with pagination queries from the back' do
+  describe 'when doing a query with pagination arguments from the back' do
     let(:page_result1) { BulletforgeApiSchema.execute users_query(last: 2) }
 
-    it 'understands last param' do
+    it 'understands last argument' do
       expect(page_result1['data']['users']['edges'].count).to eq(2)
     end
 
-    it 'understands last and before params' do
+    it 'understands last and before arguments' do
       page_ids1 = page_result1['data']['users']['edges'].map { |user| user['node']['id'] }
       cursor = page_result1['data']['users']['edges'].first['cursor']
 
