@@ -13,6 +13,9 @@ class User < ApplicationRecord
          :rememberable,
          :validatable
 
+  validates :login, presence: true
+  validates :password_confirmation, presence: true, on: :create
+
   has_many :projects, dependent: :destroy
 
   def to_param

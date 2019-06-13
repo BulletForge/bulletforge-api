@@ -6,11 +6,19 @@ AllCops:
     - db/schema.rb
     - db/migrate/*
 
+Style/BlockComments:
+  Exclude:
+    - spec/spec_helper.rb
+
 Style/Documentation:
   Enabled: false
 
-Metrics/MethodLength:
-  Max: 15
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
 
 Metrics/LineLength:
   Max: 120
+
+Metrics/MethodLength:
+  Max: 15
