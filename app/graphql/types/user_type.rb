@@ -8,7 +8,7 @@ module Types
     field :projects, Types::ProjectType.connection_type, null: false
 
     def id
-      object.to_param
+      object.friendly_id
     end
   end
 end

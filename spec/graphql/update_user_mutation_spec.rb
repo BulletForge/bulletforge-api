@@ -44,7 +44,7 @@ RSpec.describe 'Update user mutation', type: :feature do
       let(:new_login) { Faker::Name.unique.first_name }
       let(:results) do
         input = {
-          id: user.to_param,
+          id: user.friendly_id,
           login: new_login
         }
         graphql.update_user(input: input, context: context)
@@ -67,7 +67,7 @@ RSpec.describe 'Update user mutation', type: :feature do
     describe 'when user validations fail' do
       let(:results) do
         input = {
-          id: user.to_param,
+          id: user.friendly_id,
           password: Faker::Internet.unique.password,
           password_confirmation: Faker::Internet.unique.password
         }

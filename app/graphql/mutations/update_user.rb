@@ -13,12 +13,13 @@ module Mutations
 
     field :user, Types::UserType, null: true
 
-    def ready?(**args)
+    def ready?(**_args)
       require_login
+      true
+    end
 
-      policy = UserUpdatePolicy.new(context[:current_user], args)
-      authorize(policy)
-
+    def authorized?(**args)
+      authorize(UserUpdatePolicy.new(context[:current_user], args))
       true
     end
 

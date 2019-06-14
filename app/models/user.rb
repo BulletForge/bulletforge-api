@@ -19,10 +19,6 @@ class User < ApplicationRecord
 
   has_many :projects, dependent: :destroy
 
-  def to_param
-    permalink
-  end
-
   private
 
   def password_present?

@@ -15,7 +15,7 @@ class UserUpdatePolicy
   private
 
   def editing_self?
-    current_user.to_param == args[:id]
+    current_user.friendly_id == args[:id]
   end
 
   def no_admin_arg?

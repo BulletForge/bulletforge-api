@@ -16,7 +16,7 @@ RSpec.describe UserUpdatePolicy do
     let(:user) { create :random_user }
 
     describe 'when editing self' do
-      let(:args) { { id: user.to_param } }
+      let(:args) { { id: user.friendly_id } }
       let(:policy) { described_class.new(user, args) }
 
       it 'will be authorized' do
@@ -34,7 +34,7 @@ RSpec.describe UserUpdatePolicy do
     end
 
     describe 'when editing self and modifying admin' do
-      let(:args) { { id: user.to_param, admin: true } }
+      let(:args) { { id: user.friendly_id, admin: true } }
       let(:policy) { described_class.new(user, args) }
 
       it 'will not be authorized' do
