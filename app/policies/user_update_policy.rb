@@ -9,7 +9,7 @@ class UserUpdatePolicy
   end
 
   def authorized?
-    current_user.admin? || (editing_self? && no_admin_arg?)
+    current_user.admin? || (editing_self? && !admin_arg?)
   end
 
   private
@@ -18,7 +18,7 @@ class UserUpdatePolicy
     current_user.friendly_id == args[:id]
   end
 
-  def no_admin_arg?
-    args[:admin].nil?
+  def admin_arg?
+    args.keys.include?(:admin)
   end
 end
