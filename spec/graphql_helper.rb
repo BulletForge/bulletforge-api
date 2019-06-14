@@ -21,6 +21,11 @@ class GraphqlHelper
     BulletforgeApiSchema.execute q
   end
 
+  def update_user(input: {}, context: {})
+    q = update_user_mutation(input: camelize_keys(input)).to_s
+    BulletforgeApiSchema.execute(q, context: context)
+  end
+
   def login(input: {})
     q = login_mutation(input: camelize_keys(input)).to_s
     BulletforgeApiSchema.execute q
@@ -80,6 +85,16 @@ class GraphqlHelper
   def create_user_mutation(input:)
     mutation {
       createUser(input: input) {
+        user {
+          ___ UserFields
+        }
+      }
+    }
+  end
+
+  def update_user_mutation(input:)
+    mutation {
+      updateUser(input: input) {
         user {
           ___ UserFields
         }

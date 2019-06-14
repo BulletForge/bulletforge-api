@@ -7,7 +7,7 @@ module Mutations
     field :user, Types::UserType, null: true
 
     def resolve
-      context[:current_user]
+      { user: context[:current_user] }
     end
   end
 end
