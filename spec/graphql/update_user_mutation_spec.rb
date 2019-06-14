@@ -7,10 +7,7 @@ RSpec.describe 'Update user mutation', type: :feature do
   let(:graphql) { GraphqlHelper.new }
 
   describe 'with no current user' do
-    let(:results) do
-      input = { id: 'test' }
-      graphql.update_user(input: input)
-    end
+    let(:results) { graphql.update_user(input: { user_id: 'test' }) }
 
     it 'returns nil on the mutation' do
       expect(results['data']['updateUser']).to eq(nil)
@@ -22,12 +19,14 @@ RSpec.describe 'Update user mutation', type: :feature do
   end
 
   describe 'with a current user' do
-    let(:user) { create :random_user }
-    let(:context) { { current_user: user } }
+    let(:current_user) { create :random_user }
+    let(:context) { { current_user: current_user } }
 
     describe 'when failing authorization' do
+      let(:other_user) { create :random_user }
       let(:results) do
-        input = { id: 'not_the_current_user' }
+        user_id = graphql.user(permalink: other_user.permalink)['data']['user']['id']
+        input = { user_id: user_id }
         graphql.update_user(input: input, context: context)
       end
 
@@ -43,16 +42,17 @@ RSpec.describe 'Update user mutation', type: :feature do
     describe 'when user validations pass' do
       let(:new_login) { Faker::Name.unique.first_name }
       let(:results) do
-        input = {
-          id: user.friendly_id,
-          login: new_login
-        }
+        user_id = graphql.user(permalink: current_user.permalink)['data']['user']['id']
+        input = { user_id: user_id, login: new_login }
         graphql.update_user(input: input, context: context)
       end
 
       it 'updates the user' do
-        friendly_id = results['data']['updateUser']['user']['id']
-        expect(User.friendly.find(friendly_id).login).to eq(new_login)
+        # TODO: Figure out how to trigger the query without this hack
+        results['data']
+
+        current_user.reload
+        expect(current_user.login).to eq(new_login)
       end
 
       it 'returns the updated user' do
@@ -66,8 +66,10 @@ RSpec.describe 'Update user mutation', type: :feature do
 
     describe 'when user validations fail' do
       let(:results) do
+        user_id = graphql.user(permalink: current_user.permalink)['data']['user']['id']
+
         input = {
-          id: user.friendly_id,
+          user_id: user_id,
           password: Faker::Internet.unique.password,
           password_confirmation: Faker::Internet.unique.password
         }

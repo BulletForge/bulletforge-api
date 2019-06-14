@@ -6,8 +6,8 @@ class GraphqlHelper
   extend GQLi::DSL
   include GQLi::DSL
 
-  def user(id:)
-    q = user_query(id: id).to_s
+  def user(permalink:)
+    q = user_query(permalink: permalink).to_s
     BulletforgeApiSchema.execute q
   end
 
@@ -26,6 +26,11 @@ class GraphqlHelper
     BulletforgeApiSchema.execute(q, context: context)
   end
 
+  def destroy_user(input: {}, context: {})
+    q = destroy_user_mutation(input: camelize_keys(input)).to_s
+    BulletforgeApiSchema.execute(q, context: context)
+  end
+
   def login(input: {})
     q = login_mutation(input: camelize_keys(input)).to_s
     BulletforgeApiSchema.execute q
@@ -35,8 +40,10 @@ class GraphqlHelper
 
   UserFields = fragment('UserFields', 'User') {
     id
+    permalink
     login
     email
+    admin
   }
 
   UsersPageFields = fragment('UsersPageFields', 'User') {
@@ -64,9 +71,9 @@ class GraphqlHelper
     end
   end
 
-  def user_query(id:)
+  def user_query(permalink:)
     query {
-      __node('user', id: id) {
+      __node('user', permalink: permalink) {
         ___ UserFields
       }
     }
@@ -98,6 +105,14 @@ class GraphqlHelper
         user {
           ___ UserFields
         }
+      }
+    }
+  end
+
+  def destroy_user_mutation(input:)
+    mutation {
+      destroyUser(input: input) {
+        success
       }
     }
   end

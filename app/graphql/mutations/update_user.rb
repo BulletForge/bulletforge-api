@@ -4,7 +4,7 @@ module Mutations
   class UpdateUser < Mutations::BaseMutation
     null true
 
-    argument :id, ID, required: true
+    argument :user_id, ID, required: true, loads: Types::UserType
     argument :login, String, required: false
     argument :email, String, required: false
     argument :admin, Boolean, required: false
@@ -18,17 +18,16 @@ module Mutations
       true
     end
 
-    def authorized?(**args)
-      authorize(UserUpdatePolicy.new(context[:current_user], args))
+    def authorized?(user:, **args)
+      authorize(UpdateUserPolicy.new(context[:current_user], user, args))
       true
     end
 
-    def resolve(id:, **args)
-      user = User.friendly.find id
+    def resolve(user:, **args)
       user.update!(args)
 
       { user: user }
-    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
+    rescue ActiveRecord::RecordInvalid => e
       raise GraphQL::ExecutionError, e.message
     end
   end

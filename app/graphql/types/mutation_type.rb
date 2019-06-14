@@ -5,6 +5,7 @@ module Types
     # Users
     field :create_user, mutation: Mutations::CreateUser
     field :update_user, mutation: Mutations::UpdateUser
+    field :destroy_user, mutation: Mutations::DestroyUser
 
     # User Sessions
     field :login, mutation: Mutations::Login

@@ -8,10 +8,10 @@ RSpec.describe 'User query', type: :feature do
 
   describe 'when the user exists' do
     let(:user) { create :random_user }
-    let(:result) { graphql.user(id: user.permalink) }
+    let(:result) { graphql.user(permalink: user.permalink) }
 
     it 'returns the user with matching id' do
-      expect(result['data']['user']['id']).to eq(user.permalink)
+      expect(result['data']['user']['permalink']).to eq(user.permalink)
     end
 
     it 'returns the user with matching email' do
@@ -28,7 +28,7 @@ RSpec.describe 'User query', type: :feature do
   end
 
   describe 'when the user does not exist' do
-    let(:result) { graphql.user(id: 'nonexistant') }
+    let(:result) { graphql.user(permalink: 'nonexistant') }
 
     it 'does not return data' do
       expect(result['data']).to eq(nil)

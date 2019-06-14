@@ -33,8 +33,8 @@ RSpec.describe 'Create user mutation', type: :feature do
       let(:results) { graphql.create_user(input: input) }
 
       it 'creates the user' do
-        friendly_id = results['data']['createUser']['user']['id']
-        expect { User.friendly.find(friendly_id) }.not_to raise_error
+        permalink = results['data']['createUser']['user']['permalink']
+        expect { User.friendly.find(permalink) }.not_to raise_error
       end
 
       it 'returns the created user' do

@@ -2,13 +2,14 @@
 
 module Types
   class UserType < Types::BaseObject
-    field :id, ID, null: false
+    implements GraphQL::Relay::Node.interface
+
+    global_id_field :id
+
+    field :permalink, String, null: true
     field :email, String, null: true
     field :login, String, null: true
+    field :admin, Boolean, null: true
     field :projects, Types::ProjectType.connection_type, null: false
-
-    def id
-      object.friendly_id
-    end
   end
 end
