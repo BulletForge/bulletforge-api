@@ -13,7 +13,7 @@ module Mutations
     end
 
     def require_login_message
-      'You must be logged in to peform this action'
+      'You must be logged in to perform this action'
     end
 
     def unauthorized_message
