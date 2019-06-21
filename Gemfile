@@ -20,6 +20,7 @@ group :development, :test do
   gem 'factory_bot'
   gem 'faker'
   gem 'gqli', require: false
+  gem 'pry'
   gem 'rspec-rails'
   gem 'rubocop'
   gem 'rubocop-rspec'
