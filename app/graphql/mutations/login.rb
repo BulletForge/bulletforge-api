@@ -12,7 +12,9 @@ module Mutations
 
     def ready?(**args)
       required = %i[login password]
-      required_arguments(args: args, required: required, on_error: { token: nil })
+      required_arguments(args: args, required: required)
+
+      super(**args)
     end
 
     def resolve(login:, password:)
@@ -27,20 +29,22 @@ module Mutations
           errors: []
         }
       else
-        {
-          token: nil,
-          errors: login_errors
-        }
+        user_errors << login_error
+        error_response
       end
     end
 
-    def login_errors
-      [
-        {
-          path: [],
-          message: 'Invalid username/password combination'
-        }
-      ]
+    private
+
+    def error_response
+      { token: nil }.merge(super)
+    end
+
+    def login_error
+      {
+        path: [],
+        message: 'Invalid username/password combination'
+      }
     end
   end
 end

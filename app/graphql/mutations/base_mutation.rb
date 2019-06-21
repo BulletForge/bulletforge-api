@@ -2,38 +2,36 @@
 
 module Mutations
   class BaseMutation < GraphQL::Schema::RelayClassicMutation
+    def ready?(**_args)
+      continue?
+    end
+
+    def authorized?(**_args)
+      continue?
+    end
+
     private
 
-    def require_login(on_error: {})
-      if logged_in?
+    def continue?
+      if user_errors.empty?
         true
       else
-        on_error[:errors] = [require_login_error]
-        [false, on_error]
+        [false, error_response]
       end
     end
 
-    def required_arguments(args:, required:, on_error: {})
-      errors = []
+    def require_login
+      user_errors << require_login_error unless logged_in?
+    end
+
+    def required_arguments(args:, required:)
       required.each do |required_arg|
-        errors << required_arg_error(required_arg) if args[required_arg].nil?
-      end
-
-      if errors.empty?
-        true
-      else
-        on_error[:errors] = errors
-        [false, on_error]
+        user_errors << required_arg_error(required_arg) if args[required_arg].nil?
       end
     end
 
-    def authorize(policy, on_error: {})
-      if policy.authorized?
-        true
-      else
-        on_error[:errors] = [unauthorized_error]
-        [false, on_error]
-      end
+    def authorize(policy)
+      user_errors << unauthorized_error unless policy.authorized?
     end
 
     def logged_in?
@@ -45,6 +43,18 @@ module Mutations
       return if context[:current_user] || !context[:current_user_id]
 
       context[:current_user] = User.find(context[:current_user_id])
+    end
+
+    def user_errors
+      return @user_errors if @user_errors
+
+      @user_errors = []
+    end
+
+    def error_response
+      {
+        errors: user_errors
+      }
     end
 
     def require_login_error

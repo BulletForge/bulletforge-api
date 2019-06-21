@@ -10,17 +10,19 @@ module Mutations
     field :errors, [Types::UserErrorType], null: false
 
     def ready?(**args)
-      continue, error_response = require_login(on_error: { success: false })
-      return false, error_response unless continue
+      require_login
 
       # user_id arg is removed when converted to user
       required = %i[user]
-      required_arguments(args: args, required: required, on_error: { success: false })
+      required_arguments(args: args, required: required)
+
+      super(**args)
     end
 
-    def authorized?(**_args)
-      policy = DestroyUserPolicy.new(context[:current_user])
-      authorize(policy, on_error: { success: false })
+    def authorized?(**args)
+      authorize DestroyUserPolicy.new(context[:current_user])
+
+      super(**args)
     end
 
     def resolve(user:)
@@ -30,6 +32,12 @@ module Mutations
         success: true,
         errors: []
       }
+    end
+
+    private
+
+    def error_response
+      { success: false }.merge(super)
     end
   end
 end

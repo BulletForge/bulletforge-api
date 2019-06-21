@@ -12,8 +12,9 @@ module Mutations
     field :user, Types::UserType, null: true
     field :errors, [Types::UserErrorType], null: false
 
-    def ready?(**_args)
+    def ready?(**args)
       require_login
+      super(**args)
     end
 
     def resolve(**args)
@@ -24,19 +25,21 @@ module Mutations
           errors: []
         }
       else
-        {
-          user: nil,
-          errors: build_errors(user)
-        }
+        add_errors(user)
+        error_response
       end
     end
 
     private
 
-    def build_errors(user)
-      user.errors.map do |attribute, message|
+    def error_response
+      { user: nil }.merge(super)
+    end
+
+    def add_errors(user)
+      user.errors.each do |attribute, message|
         attribute = attribute.to_s.camelize(:lower)
-        {
+        user_errors << {
           path: ['input', attribute.to_s.camelize(:lower)],
           message: attribute + ' ' + message
         }

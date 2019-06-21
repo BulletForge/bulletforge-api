@@ -14,7 +14,9 @@ module Mutations
 
     def ready?(**args)
       required = %i[login email password password_confirmation]
-      required_arguments(args: args, required: required, on_error: { user: nil })
+      required_arguments(args: args, required: required)
+
+      super(**args)
     end
 
     def resolve(**args)
@@ -26,19 +28,21 @@ module Mutations
           errors: []
         }
       else
-        {
-          user: nil,
-          errors: build_errors(user)
-        }
+        add_errors(user)
+        error_response
       end
     end
 
     private
 
-    def build_errors(user)
-      user.errors.map do |attribute, message|
+    def error_response
+      { user: nil }.merge(super)
+    end
+
+    def add_errors(user)
+      user.errors.each do |attribute, message|
         attribute = attribute.to_s.camelize(:lower)
-        {
+        user_errors << {
           path: ['input', attribute.to_s.camelize(:lower)],
           message: attribute + ' ' + message
         }

@@ -7,8 +7,9 @@ module Mutations
     field :success, Boolean, null: true
     field :errors, [Types::UserErrorType], null: false
 
-    def ready?(**_args)
-      require_login(on_error: { success: false })
+    def ready?(**args)
+      require_login
+      super(**args)
     end
 
     def resolve
@@ -18,6 +19,12 @@ module Mutations
         success: true,
         errors: []
       }
+    end
+
+    private
+
+    def error_response
+      { success: false }.merge(super)
     end
   end
 end
