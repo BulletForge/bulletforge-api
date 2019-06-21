@@ -6,16 +6,22 @@ require 'graphql_helper'
 RSpec.describe 'Register mutation', type: :feature do
   let(:graphql) { GraphqlHelper.new }
   let(:results) { graphql.register(input: input) }
+  let(:data)    { results['data']['register'] }
+  let(:errors)  { results['errors'] }
 
   describe 'when passing invalid arguments' do
     let(:input) { {} }
 
-    it 'returns no data' do
-      expect(results['data']).to eq(nil)
+    it 'returns nil for user' do
+      expect(data['user']).to eq(nil)
     end
 
-    it 'returns errors' do
-      expect(results['errors']).not_to be_empty
+    it 'does not return top level errors' do
+      expect(errors).to eq(nil)
+    end
+
+    it 'returns errors as data' do
+      expect(data['errors']).not_to be_empty
     end
   end
 
@@ -35,16 +41,20 @@ RSpec.describe 'Register mutation', type: :feature do
       let(:password) { Faker::Internet.password }
 
       it 'creates the user' do
-        permalink = results['data']['register']['user']['permalink']
+        permalink = data['user']['permalink']
         expect { User.friendly.find(permalink) }.not_to raise_error
       end
 
       it 'returns the created user' do
-        expect(results['data']['register']['user']).not_to eq(nil)
+        expect(data['user']).not_to eq(nil)
       end
 
-      it 'does not return errors' do
-        expect(results['errors']).to eq(nil)
+      it 'does not return top level errors' do
+        expect(errors).to eq(nil)
+      end
+
+      it 'does not return errors as data' do
+        expect(data['errors']).to be_empty
       end
     end
 
@@ -53,12 +63,16 @@ RSpec.describe 'Register mutation', type: :feature do
       let(:email)    { '' }
       let(:password) { Faker::Internet.password }
 
-      it 'returns nil on the mutation' do
-        expect(results['data']['register']).to eq(nil)
+      it 'returns nil on user' do
+        expect(data['user']).to eq(nil)
       end
 
-      it 'returns errors' do
-        expect(results['errors']).not_to be_empty
+      it 'does not return top level errors' do
+        expect(errors).to eq(nil)
+      end
+
+      it 'returns errors as data' do
+        expect(data['errors']).not_to be_empty
       end
     end
   end

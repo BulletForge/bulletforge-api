@@ -65,6 +65,13 @@ class GraphqlHelper
     }
   }
 
+  UserErrorFields = fragment('UserErrorFields', 'UserError') {
+    errors {
+      path
+      message
+    }
+  }
+
   # Recursively camelize the keys in a hash
   def camelize_keys(obj)
     case obj
@@ -105,6 +112,7 @@ class GraphqlHelper
         user {
           ___ UserFields
         }
+        ___ UserErrorFields
       }
     }
   end
@@ -115,6 +123,7 @@ class GraphqlHelper
         user {
           ___ UserFields
         }
+        ___ UserErrorFields
       }
     }
   end
@@ -125,6 +134,7 @@ class GraphqlHelper
         user {
           ___ UserFields
         }
+        ___ UserErrorFields
       }
     }
   end
@@ -133,6 +143,7 @@ class GraphqlHelper
     mutation {
       destroyUser(input: input) {
         success
+        ___ UserErrorFields
       }
     }
   end
@@ -141,6 +152,7 @@ class GraphqlHelper
     mutation {
       destroyMe(input: input) {
         success
+        ___ UserErrorFields
       }
     }
   end
@@ -149,6 +161,7 @@ class GraphqlHelper
     mutation {
       login(input: input) {
         token
+        ___ UserErrorFields
       }
     }
   end

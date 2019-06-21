@@ -5,16 +5,19 @@ module Mutations
     null true
 
     field :success, Boolean, null: true
+    field :errors, [Types::UserErrorType], null: false
 
     def ready?(**_args)
-      require_login
-      true
+      require_login(on_error: { success: false })
     end
 
     def resolve
       context[:current_user].destroy
 
-      { success: true }
+      {
+        success: true,
+        errors: []
+      }
     end
   end
 end

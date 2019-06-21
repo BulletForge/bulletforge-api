@@ -6,21 +6,27 @@ require 'graphql_helper'
 RSpec.describe 'UpdateMe mutation', type: :feature do
   let(:graphql) { GraphqlHelper.new }
   let(:results) { graphql.update_me(input: input, context: context) }
+  let(:data)    { results['data']['updateMe'] }
+  let(:errors)  { results['errors'] }
 
   describe 'with no current user' do
     let(:context) { {} }
     let(:input)   { {} }
 
-    it 'returns nil on the mutation' do
-      expect(results['data']['updateUser']).to eq(nil)
+    it 'returns nil on user' do
+      expect(data['user']).to eq(nil)
     end
 
-    it 'returns errors' do
-      expect(results['errors']).not_to be_empty
+    it 'does not return top level errors' do
+      expect(errors).to eq(nil)
+    end
+
+    it 'returns errors as data' do
+      expect(data['errors']).not_to be_empty
     end
   end
 
-  describe 'with a current user that is admin' do
+  describe 'with a current user' do
     let(:current_user) { create :random_user }
     let(:context)      { { current_user_id: current_user.id } }
 
@@ -29,19 +35,23 @@ RSpec.describe 'UpdateMe mutation', type: :feature do
       let(:input)     { { login: new_login } }
 
       it 'updates the user' do
-        # TODO: Figure out how to trigger the query without this hack
-        results['data']
+        # Trigger lazy resolution
+        data
 
         current_user.reload
         expect(current_user.login).to eq(new_login)
       end
 
       it 'returns the updated user' do
-        expect(results['data']['updateMe']['user']).not_to eq(nil)
+        expect(data['user']).not_to eq(nil)
       end
 
-      it 'does not return errors' do
-        expect(results['errors']).to eq(nil)
+      it 'does not return top level errors' do
+        expect(errors).to eq(nil)
+      end
+
+      it 'does not return errors as data' do
+        expect(data['errors']).to be_empty
       end
     end
 
@@ -53,12 +63,16 @@ RSpec.describe 'UpdateMe mutation', type: :feature do
         }
       end
 
-      it 'returns nil on the mutation' do
-        expect(results['data']['updateUser']).to eq(nil)
+      it 'returns nil on user' do
+        expect(data['user']).to eq(nil)
       end
 
-      it 'returns errors' do
-        expect(results['errors']).not_to be_empty
+      it 'does not return top level errors' do
+        expect(errors).to eq(nil)
+      end
+
+      it 'returns errors as data' do
+        expect(data['errors']).not_to be_empty
       end
     end
   end

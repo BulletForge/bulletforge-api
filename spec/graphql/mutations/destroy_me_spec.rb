@@ -6,16 +6,22 @@ require 'graphql_helper'
 RSpec.describe 'DestroyMe mutation', type: :feature do
   let(:graphql)    { GraphqlHelper.new }
   let(:results)    { graphql.destroy_me(context: context) }
+  let(:data)    { results['data']['destroyMe'] }
+  let(:errors)  { results['errors'] }
 
   describe 'with no current user' do
     let(:context) { {} }
 
-    it 'returns nil on the mutation' do
-      expect(results['data']['destroyMe']).to eq(nil)
+    it 'returns false on success' do
+      expect(data['success']).to eq(false)
     end
 
-    it 'returns errors' do
-      expect(results['errors']).not_to be_empty
+    it 'does not return top level errors' do
+      expect(errors).to eq(nil)
+    end
+
+    it 'returns errors as data' do
+      expect(data['errors']).not_to be_empty
     end
   end
 
@@ -24,17 +30,21 @@ RSpec.describe 'DestroyMe mutation', type: :feature do
     let(:context)      { { current_user_id: current_user.id } }
 
     it 'destroys the user' do
-      # TODO: Figure out how to trigger the query without this hack
-      results['data']
+      # Trigger lazy resolution
+      data
       expect { User.find(current_user.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it 'returns success' do
-      expect(results['data']['destroyMe']['success']).to eq(true)
+      expect(data['success']).to eq(true)
     end
 
-    it 'does not return errors' do
-      expect(results['errors']).to eq(nil)
+    it 'does not return top level errors' do
+      expect(errors).to eq(nil)
+    end
+
+    it 'does not return errors as data' do
+      expect(data['errors']).to be_empty
     end
   end
 end

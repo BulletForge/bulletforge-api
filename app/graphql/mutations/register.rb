@@ -4,24 +4,45 @@ module Mutations
   class Register < Mutations::BaseMutation
     null true
 
-    argument :login, String, required: true
-    argument :email, String, required: true
-    argument :password, String, required: true
-    argument :passwordConfirmation, String, required: true
+    argument :login, String, required: false
+    argument :email, String, required: false
+    argument :password, String, required: false
+    argument :password_confirmation, String, required: false
 
     field :user, Types::UserType, null: true
+    field :errors, [Types::UserErrorType], null: false
 
-    def resolve(login:, email:, password:, password_confirmation:)
-      user = User.create!(
-        login: login,
-        email: email,
-        password: password,
-        password_confirmation: password_confirmation
-      )
+    def ready?(**args)
+      required = %i[login email password password_confirmation]
+      required_arguments(args: args, required: required, on_error: { user: nil })
+    end
 
-      { user: user }
-    rescue ActiveRecord::RecordInvalid => e
-      raise GraphQL::ExecutionError, e.message
+    def resolve(**args)
+      user = User.new(**args)
+
+      if user.save
+        {
+          user: user,
+          errors: []
+        }
+      else
+        {
+          user: nil,
+          errors: build_errors(user)
+        }
+      end
+    end
+
+    private
+
+    def build_errors(user)
+      user.errors.map do |attribute, message|
+        attribute = attribute.to_s.camelize(:lower)
+        {
+          path: ['input', attribute.to_s.camelize(:lower)],
+          message: attribute + ' ' + message
+        }
+      end
     end
   end
 end
