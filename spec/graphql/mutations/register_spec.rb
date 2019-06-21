@@ -5,9 +5,10 @@ require 'graphql_helper'
 
 RSpec.describe 'Register mutation', type: :feature do
   let(:graphql) { GraphqlHelper.new }
+  let(:results) { graphql.register(input: input) }
 
   describe 'when passing invalid arguments' do
-    let(:results) { graphql.register }
+    let(:input) { {} }
 
     it 'returns no data' do
       expect(results['data']).to eq(nil)
@@ -20,17 +21,18 @@ RSpec.describe 'Register mutation', type: :feature do
 
   describe 'when passing valid arguments' do
     let(:input) do
-      pwd = Faker::Internet.password
       {
-        login: Faker::Name.first_name,
-        email: Faker::Internet.email,
-        password: pwd,
-        password_confirmation: pwd
+        login: login,
+        email: email,
+        password: password,
+        password_confirmation: password
       }
     end
 
     describe 'when user validations pass' do
-      let(:results) { graphql.register(input: input) }
+      let(:login)    { Faker::Name.first_name }
+      let(:email)    { Faker::Internet.email }
+      let(:password) { Faker::Internet.password }
 
       it 'creates the user' do
         permalink = results['data']['register']['user']['permalink']
@@ -47,10 +49,9 @@ RSpec.describe 'Register mutation', type: :feature do
     end
 
     describe 'when user validations fail' do
-      let(:results) do
-        input[:password_confirmation] = ''
-        graphql.register(input: input)
-      end
+      let(:login)    { Faker::Name.first_name }
+      let(:email)    { '' }
+      let(:password) { Faker::Internet.password }
 
       it 'returns nil on the mutation' do
         expect(results['data']['register']).to eq(nil)

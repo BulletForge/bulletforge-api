@@ -3,7 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe UpdateUserPolicy do
-  let(:other_user) { create :random_user }
   let(:policy) { described_class.new(current_user) }
 
   describe 'when current_user is an admin' do

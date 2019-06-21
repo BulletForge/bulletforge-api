@@ -5,10 +5,11 @@ require 'graphql_helper'
 
 RSpec.describe 'User query', type: :feature do
   let(:graphql) { GraphqlHelper.new }
+  let(:result)  { graphql.user(permalink: permalink) }
 
   describe 'when the user exists' do
-    let(:user) { create :random_user }
-    let(:result) { graphql.user(permalink: user.permalink) }
+    let(:user)      { create :random_user }
+    let(:permalink) { user.permalink }
 
     it 'returns the user with matching id' do
       expect(result['data']['user']['permalink']).to eq(user.permalink)
@@ -28,7 +29,7 @@ RSpec.describe 'User query', type: :feature do
   end
 
   describe 'when the user does not exist' do
-    let(:result) { graphql.user(permalink: 'nonexistant') }
+    let(:permalink) { 'nonexistant' }
 
     it 'does not return data' do
       expect(result['data']).to eq(nil)
