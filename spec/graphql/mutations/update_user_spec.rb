@@ -8,7 +8,7 @@ RSpec.describe 'UpdateUser mutation', type: :feature do
   let(:results) { graphql.update_user(input: input, context: context) }
 
   describe 'with no current user' do
-    let(:input) { { user_id: 'test' } }
+    let(:input)   { { user_id: 'test' } }
     let(:context) { {} }
 
     it 'returns nil on the mutation' do
@@ -22,9 +22,9 @@ RSpec.describe 'UpdateUser mutation', type: :feature do
 
   describe 'with a current user that isn\'t admin' do
     let(:current_user) { create :random_user }
-    let(:user_id) { graphql.user(permalink: current_user.permalink)['data']['user']['id'] }
-    let(:input) { { user_id: user_id } }
-    let(:context) { { current_user_id: current_user.id } }
+    let(:user_id)      { graphql.user(permalink: current_user.permalink)['data']['user']['id'] }
+    let(:input)        { { user_id: user_id } }
+    let(:context)      { { current_user_id: current_user.id } }
 
     it 'returns nil on the mutation' do
       expect(results['data']['updateUser']).to eq(nil)
@@ -37,12 +37,12 @@ RSpec.describe 'UpdateUser mutation', type: :feature do
 
   describe 'with a current user that is admin' do
     let(:current_user) { create :random_admin }
-    let(:user_id) { graphql.user(permalink: current_user.permalink)['data']['user']['id'] }
-    let(:context) { { current_user_id: current_user.id } }
+    let(:user_id)      { graphql.user(permalink: current_user.permalink)['data']['user']['id'] }
+    let(:context)      { { current_user_id: current_user.id } }
 
     describe 'when user validations pass' do
       let(:new_login) { Faker::Name.unique.first_name }
-      let(:input) { { user_id: user_id, login: new_login } }
+      let(:input)     { { user_id: user_id, login: new_login } }
 
       it 'updates the user' do
         # TODO: Figure out how to trigger the query without this hack

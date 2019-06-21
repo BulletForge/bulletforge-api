@@ -4,10 +4,14 @@ require 'rails_helper'
 require 'graphql_helper'
 
 RSpec.describe 'DestroyUser mutation', type: :feature do
-  let(:graphql) { GraphqlHelper.new }
+  let(:other_user) { create :random_user }
+  let(:user_id)    { graphql.user(permalink: other_user.permalink)['data']['user']['id'] }
+  let(:input)      { { user_id: user_id } }
+  let(:graphql)    { GraphqlHelper.new }
+  let(:results)    { graphql.destroy_user(input: input, context: context) }
 
   describe 'with no current user' do
-    let(:results) { graphql.destroy_user(input: { user_id: 'test' }) }
+    let(:context) { {} }
 
     it 'returns nil on the mutation' do
       expect(results['data']['destroyUser']).to eq(nil)
@@ -18,36 +22,28 @@ RSpec.describe 'DestroyUser mutation', type: :feature do
     end
   end
 
-  describe 'with a current user' do
+  describe 'with a current user that isn\'t an admin' do
     let(:current_user) { create :random_user }
-    let(:context) { { current_user: current_user } }
+    let(:context)      { { current_user_id: current_user.id } }
 
-    describe 'when failing authorization' do
-      let(:other_user) { create :random_user }
-      let(:results) do
-        user_id = graphql.user(permalink: other_user.permalink)['data']['user']['id']
-        graphql.destroy_user(input: { user_id: user_id }, context: context)
-      end
-
-      it 'returns nil on the mutation' do
-        expect(results['data']['updateUser']).to eq(nil)
-      end
-
-      it 'returns errors' do
-        expect(results['errors']).not_to be_empty
-      end
+    it 'returns nil on the mutation' do
+      expect(results['data']['destroyUser']).to eq(nil)
     end
 
-    describe 'when destruction is successful' do
-      let(:results) do
-        user_id = graphql.user(permalink: current_user.permalink)['data']['user']['id']
-        graphql.destroy_user(input: { user_id: user_id }, context: context)
-      end
+    it 'returns errors' do
+      expect(results['errors']).not_to be_empty
+    end
+  end
 
+  describe 'with a current user that is an admin' do
+    let(:current_user) { create :random_admin }
+    let(:context)      { { current_user_id: current_user.id } }
+
+    describe 'when destruction is successful' do
       it 'destroys the user' do
         # TODO: Figure out how to trigger the query without this hack
         results['data']
-        expect { User.find(current_user.id) }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { User.find(other_user.id) }.to raise_error(ActiveRecord::RecordNotFound)
       end
 
       it 'returns success' do

@@ -19,7 +19,8 @@ module Mutations
     end
 
     def authorized?(**_args)
-      authorize(UpdateUserPolicy.new(context[:current_user]))
+      policy = UpdateUserPolicy.new(context[:current_user])
+      authorize policy
       true
     end
 

@@ -9,7 +9,7 @@ RSpec.describe 'UpdateMe mutation', type: :feature do
 
   describe 'with no current user' do
     let(:context) { {} }
-    let(:input) { {} }
+    let(:input)   { {} }
 
     it 'returns nil on the mutation' do
       expect(results['data']['updateUser']).to eq(nil)
@@ -22,11 +22,11 @@ RSpec.describe 'UpdateMe mutation', type: :feature do
 
   describe 'with a current user that is admin' do
     let(:current_user) { create :random_user }
-    let(:context) { { current_user_id: current_user.id } }
+    let(:context)      { { current_user_id: current_user.id } }
 
     describe 'when user validations pass' do
       let(:new_login) { Faker::Name.unique.first_name }
-      let(:input) { { login: new_login } }
+      let(:input)     { { login: new_login } }
 
       it 'updates the user' do
         # TODO: Figure out how to trigger the query without this hack

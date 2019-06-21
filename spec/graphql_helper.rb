@@ -6,19 +6,19 @@ class GraphqlHelper
   extend GQLi::DSL
   include GQLi::DSL
 
-  def user(permalink:)
+  def user(permalink:, context: {})
     q = user_query(permalink: permalink).to_s
-    BulletforgeApiSchema.execute q
+    BulletforgeApiSchema.execute(q, context: context)
   end
 
-  def users(**args)
+  def users(context: {}, **args)
     q = users_query(camelize_keys(**args)).to_s
-    BulletforgeApiSchema.execute q
+    BulletforgeApiSchema.execute(q, context: context)
   end
 
-  def register(input: {})
+  def register(input: {}, context: {})
     q = register_mutation(input: camelize_keys(input)).to_s
-    BulletforgeApiSchema.execute q
+    BulletforgeApiSchema.execute(q, context: context)
   end
 
   def update_me(input: {}, context: {})
@@ -31,14 +31,19 @@ class GraphqlHelper
     BulletforgeApiSchema.execute(q, context: context)
   end
 
+  def destroy_me(input: {}, context: {})
+    q = destroy_me_mutation(input: camelize_keys(input)).to_s
+    BulletforgeApiSchema.execute(q, context: context)
+  end
+
   def destroy_user(input: {}, context: {})
     q = destroy_user_mutation(input: camelize_keys(input)).to_s
     BulletforgeApiSchema.execute(q, context: context)
   end
 
-  def login(input: {})
+  def login(input: {}, context: {})
     q = login_mutation(input: camelize_keys(input)).to_s
-    BulletforgeApiSchema.execute q
+    BulletforgeApiSchema.execute(q, context: context)
   end
 
   private
@@ -127,6 +132,14 @@ class GraphqlHelper
   def destroy_user_mutation(input:)
     mutation {
       destroyUser(input: input) {
+        success
+      }
+    }
+  end
+
+  def destroy_me_mutation(input:)
+    mutation {
+      destroyMe(input: input) {
         success
       }
     }
