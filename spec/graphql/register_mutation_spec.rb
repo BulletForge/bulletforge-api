@@ -3,11 +3,11 @@
 require 'rails_helper'
 require 'graphql_helper'
 
-RSpec.describe 'Create user mutation', type: :feature do
+RSpec.describe 'register mutation', type: :feature do
   let(:graphql) { GraphqlHelper.new }
 
   describe 'when passing invalid arguments' do
-    let(:results) { graphql.create_user }
+    let(:results) { graphql.register }
 
     it 'returns no data' do
       expect(results['data']).to eq(nil)
@@ -30,15 +30,15 @@ RSpec.describe 'Create user mutation', type: :feature do
     end
 
     describe 'when user validations pass' do
-      let(:results) { graphql.create_user(input: input) }
+      let(:results) { graphql.register(input: input) }
 
       it 'creates the user' do
-        permalink = results['data']['createUser']['user']['permalink']
+        permalink = results['data']['register']['user']['permalink']
         expect { User.friendly.find(permalink) }.not_to raise_error
       end
 
       it 'returns the created user' do
-        expect(results['data']['createUser']['user']).not_to eq(nil)
+        expect(results['data']['register']['user']).not_to eq(nil)
       end
 
       it 'does not return errors' do
@@ -49,11 +49,11 @@ RSpec.describe 'Create user mutation', type: :feature do
     describe 'when user validations fail' do
       let(:results) do
         input[:password_confirmation] = ''
-        graphql.create_user(input: input)
+        graphql.register(input: input)
       end
 
       it 'returns nil on the mutation' do
-        expect(results['data']['createUser']).to eq(nil)
+        expect(results['data']['register']).to eq(nil)
       end
 
       it 'returns errors' do

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Mutations
-  class CreateUser < Mutations::BaseMutation
+  class Register < Mutations::BaseMutation
     null true
 
     argument :login, String, required: true

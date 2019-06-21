@@ -16,8 +16,8 @@ class GraphqlHelper
     BulletforgeApiSchema.execute q
   end
 
-  def create_user(input: {})
-    q = create_user_mutation(input: camelize_keys(input)).to_s
+  def register(input: {})
+    q = register_mutation(input: camelize_keys(input)).to_s
     BulletforgeApiSchema.execute q
   end
 
@@ -89,9 +89,9 @@ class GraphqlHelper
     }
   end
 
-  def create_user_mutation(input:)
+  def register_mutation(input:)
     mutation {
-      createUser(input: input) {
+      register(input: input) {
         user {
           ___ UserFields
         }
