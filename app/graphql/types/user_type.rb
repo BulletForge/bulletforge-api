@@ -10,6 +10,10 @@ module Types
     field :email, String, null: true
     field :login, String, null: true
     field :admin, Boolean, null: true
+
     field :projects, Types::ProjectType.connection_type, null: false
+    def projects
+      AssociationLoader.for(User, :projects).load(object).then(&:to_ary)
+    end
   end
 end

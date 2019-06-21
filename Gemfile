@@ -9,6 +9,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise'
 gem 'friendly_id'
 gem 'graphql'
+gem 'graphql-batch'
 gem 'jwt'
 gem 'pg'
 gem 'puma', '~> 3.11'

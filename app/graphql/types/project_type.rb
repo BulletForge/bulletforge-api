@@ -10,5 +10,10 @@ module Types
     field :title, String, null: true
     field :description, String, null: true
     field :version_number, String, null: true
+
+    field :user, Types::UserType, null: true
+    def user
+      AssociationLoader.for(Project, :user).load(object)
+    end
   end
 end
