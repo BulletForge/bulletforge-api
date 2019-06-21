@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'graphql_helper'
 
-RSpec.describe 'Destroy user mutation', type: :feature do
+RSpec.describe 'DestroyUser mutation', type: :feature do
   let(:graphql) { GraphqlHelper.new }
 
   describe 'with no current user' do

@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 module Mutations
-  class UpdateUser < Mutations::BaseMutation
+  class UpdateMe < Mutations::BaseMutation
     null true
 
-    argument :user_id, ID, required: true, loads: Types::UserType
     argument :login, String, required: false
     argument :email, String, required: false
-    argument :admin, Boolean, required: false
     argument :password, String, required: false
     argument :passwordConfirmation, String, required: false
 
@@ -18,12 +16,8 @@ module Mutations
       true
     end
 
-    def authorized?(**_args)
-      authorize(UpdateUserPolicy.new(context[:current_user]))
-      true
-    end
-
-    def resolve(user:, **args)
+    def resolve(**args)
+      user = context[:current_user]
       user.update!(args)
 
       { user: user }

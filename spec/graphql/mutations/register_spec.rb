@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'graphql_helper'
 
-RSpec.describe 'register mutation', type: :feature do
+RSpec.describe 'Register mutation', type: :feature do
   let(:graphql) { GraphqlHelper.new }
 
   describe 'when passing invalid arguments' do

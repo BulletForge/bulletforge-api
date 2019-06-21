@@ -22,9 +22,9 @@ module Mutations
     end
 
     def load_current_user
-      return unless context[:current_user_id]
+      return if context[:current_user] || !context[:current_user_id]
 
-      context[:current_user] ||= RecordLoader.for(User).load(context[:current_user_id])
+      context[:current_user] = User.find(context[:current_user_id])
     end
   end
 end

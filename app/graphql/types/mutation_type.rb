@@ -2,7 +2,10 @@
 
 module Types
   class MutationType < Types::BaseObject
-    # Users
+    # Users (non-admin)
+    field :update_me, mutation: Mutations::UpdateMe
+
+    # Users (admin)
     field :update_user, mutation: Mutations::UpdateUser
     field :destroy_user, mutation: Mutations::DestroyUser
 
