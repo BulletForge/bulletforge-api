@@ -5,6 +5,7 @@ module Mutations
     private
 
     def require_login
+      load_current_user
       raise GraphQL::ExecutionError, require_login_message unless context[:current_user]
     end
 
@@ -18,6 +19,12 @@ module Mutations
 
     def unauthorized_message
       'You do not have permission to perform this action'
+    end
+
+    def load_current_user
+      return unless context[:current_user_id]
+
+      context[:current_user] ||= RecordLoader.for(User).load(context[:current_user_id])
     end
   end
 end

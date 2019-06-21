@@ -14,7 +14,7 @@ module Types
       argument :permalink, String, required: true
     end
     def user(permalink:)
-      User.friendly.find(permalink)
+      RecordLoader.for(User, column: :permalink).load(permalink)
     rescue ActiveRecord::RecordNotFound => e
       raise GraphQL::ExecutionError, e.message
     end
@@ -26,7 +26,7 @@ module Types
 
     field :me, Types::UserType, null: false
     def me
-      context[:current_user]
+      RecordLoader.for(User).load(context[:current_user_id])
     end
   end
 end

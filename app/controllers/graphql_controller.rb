@@ -3,7 +3,7 @@
 class GraphqlController < ApplicationController
   def execute
     context = {
-      current_user: find_current_user
+      current_user_id: current_user_id
     }
 
     result = BulletforgeApiSchema.execute(
@@ -22,19 +22,14 @@ class GraphqlController < ApplicationController
 
   private
 
-  # Devise provides current_user already, but doesn't recognize JWTs.
-  # We can't use devise-jwt since there doesn't appear to be a way to
-  # ask it to generate a token for us outside of logging in through
-  # the Devise routes.
-  def find_current_user
+  def current_user_id
     auth_header = request.headers['Authorization']
-    auth_header ||= request.cookies['_auth'] if Rails.env.development? # Dumb hack for graphiql-rails
     return unless auth_header
 
     auth_token = auth_header.split(' ').last
     decoded_json = JsonWebToken.decode(auth_token)
 
-    User.find(decoded_json[:user_id]) if decoded_json
+    decoded_json[:user_id] if decoded_json
   end
 
   # Handle form data, JSON body, or a blank value
