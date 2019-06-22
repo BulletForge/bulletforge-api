@@ -21,7 +21,6 @@ module Mutations
 
     def authorized?(**args)
       authorize DestroyUserPolicy.new(context[:current_user])
-
       super(**args)
     end
 
