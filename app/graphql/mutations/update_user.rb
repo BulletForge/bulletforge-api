@@ -4,7 +4,7 @@ module Mutations
   class UpdateUser < Mutations::BaseMutation
     null true
 
-    argument :user_id, ID, required: false, loads: Types::UserType
+    argument :user_id, ID, required: true, loads: Types::UserType
     argument :login, String, required: false
     argument :email, String, required: false
     argument :admin, Boolean, required: false
@@ -16,11 +16,6 @@ module Mutations
 
     def ready?(**args)
       require_login
-
-      # user_id arg is removed when converted to user
-      required = %i[user]
-      required_arguments(args: args, required: required)
-
       super(**args)
     end
 

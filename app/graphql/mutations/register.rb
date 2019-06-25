@@ -4,23 +4,21 @@ module Mutations
   class Register < Mutations::BaseMutation
     null true
 
-    argument :login, String, required: false
-    argument :email, String, required: false
-    argument :password, String, required: false
-    argument :password_confirmation, String, required: false
+    argument :login, String, required: true
+    argument :email, String, required: true
+    argument :password, String, required: true
+    argument :password_confirmation, String, required: true
 
     field :user, Types::UserType, null: true
     field :errors, [Types::UserErrorType], null: false
 
-    def ready?(**args)
-      required = %i[login email password password_confirmation]
-      required_arguments(args: args, required: required)
-
-      super(**args)
-    end
-
-    def resolve(**args)
-      user = User.new(**args)
+    def resolve(login:, email:, password:, password_confirmation:)
+      user = User.new(
+        login: login,
+        email: email,
+        password: password,
+        password_confirmation: password_confirmation
+      )
 
       if user.save
         {

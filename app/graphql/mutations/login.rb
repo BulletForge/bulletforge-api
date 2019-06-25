@@ -4,18 +4,11 @@ module Mutations
   class Login < Mutations::BaseMutation
     null true
 
-    argument :login, String, required: false
-    argument :password, String, required: false
+    argument :login, String, required: true
+    argument :password, String, required: true
 
     field :token, String, null: true
     field :errors, [Types::UserErrorType], null: false
-
-    def ready?(**args)
-      required = %i[login password]
-      required_arguments(args: args, required: required)
-
-      super(**args)
-    end
 
     def resolve(login:, password:)
       user = User.find_for_authentication(login: login)
