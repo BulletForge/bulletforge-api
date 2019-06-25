@@ -4,16 +4,17 @@ require 'rails_helper'
 require 'graphql_helper'
 
 RSpec.describe 'DestroyMe mutation', type: :feature do
-  let(:graphql)    { GraphqlHelper.new }
-  let(:results)    { graphql.destroy_me(context: context) }
-  let(:data)    { results['data']['destroyMe'] }
-  let(:errors)  { results['errors'] }
+  let(:graphql)  { GraphqlHelper.new }
+  let(:raw_data) { graphql.destroy_me(context: context) }
+  let(:data)     { raw_data['data'] }
+  let(:errors)   { raw_data['errors'] }
+  let(:results)  { data['destroyMe'] }
 
   describe 'with no current user' do
     let(:context) { {} }
 
     it 'returns false on success' do
-      expect(data['success']).to eq(false)
+      expect(results['success']).to eq(false)
     end
 
     it 'does not return top level errors' do
@@ -21,7 +22,7 @@ RSpec.describe 'DestroyMe mutation', type: :feature do
     end
 
     it 'returns errors as data' do
-      expect(data['errors']).not_to be_empty
+      expect(results['errors']).not_to be_empty
     end
   end
 
@@ -36,7 +37,7 @@ RSpec.describe 'DestroyMe mutation', type: :feature do
     end
 
     it 'returns success' do
-      expect(data['success']).to eq(true)
+      expect(results['success']).to eq(true)
     end
 
     it 'does not return top level errors' do
@@ -44,7 +45,7 @@ RSpec.describe 'DestroyMe mutation', type: :feature do
     end
 
     it 'does not return errors as data' do
-      expect(data['errors']).to be_empty
+      expect(results['errors']).to be_empty
     end
   end
 end

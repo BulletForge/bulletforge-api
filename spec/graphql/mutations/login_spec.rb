@@ -4,24 +4,21 @@ require 'rails_helper'
 require 'graphql_helper'
 
 RSpec.describe 'Login mutation', type: :feature do
-  let(:graphql) { GraphqlHelper.new }
-  let(:results) { graphql.login(input: input) }
-  let(:data)    { results['data']['login'] }
-  let(:errors)  { results['errors'] }
+  let(:graphql)  { GraphqlHelper.new }
+  let(:raw_data) { graphql.login(input: input) }
+  let(:data)     { raw_data['data'] }
+  let(:errors)   { raw_data['errors'] }
+  let(:results)  { data['login'] }
 
   describe 'when passing invalid arguments' do
     let(:input) { {} }
 
-    it 'returns nil for a token' do
-      expect(data['token']).to eq(nil)
+    it 'returns nil on returned ata' do
+      expect(data).to eq(nil)
     end
 
-    it 'does not return top level errors' do
-      expect(errors).to eq(nil)
-    end
-
-    it 'returns errors as data' do
-      expect(data['errors']).not_to be_empty
+    it 'returns top level errors' do
+      expect(errors).not_to eq(nil)
     end
   end
 
@@ -34,7 +31,7 @@ RSpec.describe 'Login mutation', type: :feature do
       let(:password) { user.password }
 
       it 'returns a token' do
-        expect(data['token']).not_to eq(nil)
+        expect(results['token']).not_to eq(nil)
       end
 
       it 'does not return top level errors' do
@@ -42,7 +39,7 @@ RSpec.describe 'Login mutation', type: :feature do
       end
 
       it 'does not return errors as data' do
-        expect(data['errors']).to be_empty
+        expect(results['errors']).to be_empty
       end
     end
 
@@ -51,7 +48,7 @@ RSpec.describe 'Login mutation', type: :feature do
       let(:password) { Faker::Internet.password }
 
       it 'returns nil for a token' do
-        expect(data['token']).to eq(nil)
+        expect(results['token']).to eq(nil)
       end
 
       it 'does not return top level errors' do
@@ -59,7 +56,7 @@ RSpec.describe 'Login mutation', type: :feature do
       end
 
       it 'returns errors as data' do
-        expect(data['errors']).not_to be_empty
+        expect(results['errors']).not_to be_empty
       end
     end
   end

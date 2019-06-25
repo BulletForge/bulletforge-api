@@ -4,17 +4,18 @@ require 'rails_helper'
 require 'graphql_helper'
 
 RSpec.describe 'UpdateMe mutation', type: :feature do
-  let(:graphql) { GraphqlHelper.new }
-  let(:results) { graphql.update_me(input: input, context: context) }
-  let(:data)    { results['data']['updateMe'] }
-  let(:errors)  { results['errors'] }
+  let(:graphql)  { GraphqlHelper.new }
+  let(:raw_data) { graphql.update_me(input: input, context: context) }
+  let(:data)     { raw_data['data'] }
+  let(:errors)   { raw_data['errors'] }
+  let(:results)  { data['updateMe'] }
 
   describe 'with no current user' do
     let(:context) { {} }
     let(:input)   { {} }
 
     it 'returns nil on user' do
-      expect(data['user']).to eq(nil)
+      expect(results['user']).to eq(nil)
     end
 
     it 'does not return top level errors' do
@@ -22,7 +23,7 @@ RSpec.describe 'UpdateMe mutation', type: :feature do
     end
 
     it 'returns errors as data' do
-      expect(data['errors']).not_to be_empty
+      expect(results['errors']).not_to be_empty
     end
   end
 
@@ -36,14 +37,14 @@ RSpec.describe 'UpdateMe mutation', type: :feature do
 
       it 'updates the user' do
         # Trigger lazy resolution
-        data
+        raw_data
 
         current_user.reload
         expect(current_user.login).to eq(new_login)
       end
 
       it 'returns the updated user' do
-        expect(data['user']).not_to eq(nil)
+        expect(results['user']).not_to eq(nil)
       end
 
       it 'does not return top level errors' do
@@ -51,7 +52,7 @@ RSpec.describe 'UpdateMe mutation', type: :feature do
       end
 
       it 'does not return errors as data' do
-        expect(data['errors']).to be_empty
+        expect(results['errors']).to be_empty
       end
     end
 
@@ -64,7 +65,7 @@ RSpec.describe 'UpdateMe mutation', type: :feature do
       end
 
       it 'returns nil on user' do
-        expect(data['user']).to eq(nil)
+        expect(results['user']).to eq(nil)
       end
 
       it 'does not return top level errors' do
@@ -72,7 +73,7 @@ RSpec.describe 'UpdateMe mutation', type: :feature do
       end
 
       it 'returns errors as data' do
-        expect(data['errors']).not_to be_empty
+        expect(results['errors']).not_to be_empty
       end
     end
   end

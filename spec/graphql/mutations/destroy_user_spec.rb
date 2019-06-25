@@ -4,37 +4,35 @@ require 'rails_helper'
 require 'graphql_helper'
 
 RSpec.describe 'DestroyUser mutation', type: :feature do
-  let(:graphql)    { GraphqlHelper.new }
-  let(:results)    { graphql.destroy_user(input: input, context: context) }
-  let(:data)    { results['data']['destroyUser'] }
-  let(:errors)  { results['errors'] }
+  let(:graphql)  { GraphqlHelper.new }
+  let(:raw_data) { graphql.destroy_user(input: input, context: context) }
+  let(:data)     { raw_data['data'] }
+  let(:errors)   { raw_data['errors'] }
+  let(:results)  { data['destroyUser'] }
 
-  describe 'with no current user' do
-    let(:context) { {} }
+  describe 'with invalid arguments' do
     let(:input)   { {} }
+    let(:context) { {} }
 
-    it 'returns false on success' do
-      expect(data['success']).to eq(false)
+    it 'returns nil on returned data' do
+      expect(data).to eq(nil)
     end
 
-    it 'does not return top level errors' do
-      expect(errors).to eq(nil)
-    end
-
-    it 'returns errors as data' do
-      expect(data['errors']).not_to be_empty
+    it 'returns top level errors' do
+      expect(errors).not_to eq(nil)
     end
   end
 
-  describe 'with a current user that isn\'t an admin' do
-    let(:current_user) { create :random_user }
-    let(:context)      { { current_user_id: current_user.id } }
+  describe 'with valid arguments' do
+    let(:other_user) { create :random_user }
+    let(:user_id)    { graphql.user(permalink: other_user.permalink)['data']['user']['id'] }
+    let(:input)      { { user_id: user_id } }
 
-    describe 'with invalid arguments' do
-      let(:input) { {} }
+    describe 'with no current user' do
+      let(:context) { {} }
 
       it 'returns false on success' do
-        expect(data['success']).to eq(false)
+        expect(results['success']).to eq(false)
       end
 
       it 'does not return top level errors' do
@@ -42,17 +40,16 @@ RSpec.describe 'DestroyUser mutation', type: :feature do
       end
 
       it 'returns errors as data' do
-        expect(data['errors']).not_to be_empty
+        expect(results['errors']).not_to be_empty
       end
     end
 
-    describe 'with valid arguments' do
-      let(:other_user) { create :random_user }
-      let(:user_id)    { graphql.user(permalink: other_user.permalink)['data']['user']['id'] }
-      let(:input)      { { user_id: user_id } }
+    describe 'with a current user that isn\'t an admin' do
+      let(:current_user) { create :random_user }
+      let(:context)      { { current_user_id: current_user.id } }
 
       it 'returns false on success' do
-        expect(data['success']).to eq(false)
+        expect(results['success']).to eq(false)
       end
 
       it 'does not return top level errors' do
@@ -60,35 +57,13 @@ RSpec.describe 'DestroyUser mutation', type: :feature do
       end
 
       it 'returns errors as data' do
-        expect(data['errors']).not_to be_empty
-      end
-    end
-  end
-
-  describe 'with a current user that is an admin' do
-    let(:current_user) { create :random_admin }
-    let(:context)      { { current_user_id: current_user.id } }
-
-    describe 'with invalid arguments' do
-      let(:input) { {} }
-
-      it 'returns false on success' do
-        expect(data['success']).to eq(false)
-      end
-
-      it 'does not return top level errors' do
-        expect(errors).to eq(nil)
-      end
-
-      it 'returns errors as data' do
-        expect(data['errors']).not_to be_empty
+        expect(results['errors']).not_to be_empty
       end
     end
 
-    describe 'with valid arguments' do
-      let(:other_user) { create :random_user }
-      let(:user_id)    { graphql.user(permalink: other_user.permalink)['data']['user']['id'] }
-      let(:input)      { { user_id: user_id } }
+    describe 'with a current user that is an admin' do
+      let(:current_user) { create :random_admin }
+      let(:context)      { { current_user_id: current_user.id } }
 
       it 'destroys the user' do
         # Trigger lazy resolution
@@ -97,7 +72,7 @@ RSpec.describe 'DestroyUser mutation', type: :feature do
       end
 
       it 'returns success' do
-        expect(data['success']).to eq(true)
+        expect(results['success']).to eq(true)
       end
 
       it 'does not return top level errors' do
@@ -105,7 +80,7 @@ RSpec.describe 'DestroyUser mutation', type: :feature do
       end
 
       it 'does not return errors as data' do
-        expect(data['errors']).to be_empty
+        expect(results['errors']).to be_empty
       end
     end
   end
