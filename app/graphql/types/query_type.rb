@@ -24,7 +24,7 @@ module Types
       Project.all
     end
 
-    field :me, Types::UserType, null: false
+    field :me, Types::UserType, null: true
     def me
       RecordLoader.for(User).load(context[:current_user_id])
     end
