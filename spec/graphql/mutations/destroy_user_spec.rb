@@ -67,7 +67,7 @@ RSpec.describe 'DestroyUser mutation', type: :feature do
 
       it 'destroys the user' do
         # Trigger lazy resolution
-        data
+        raw_data
         expect { User.find(other_user.id) }.to raise_error(ActiveRecord::RecordNotFound)
       end
 
