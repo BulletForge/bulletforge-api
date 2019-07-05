@@ -6,10 +6,12 @@ module Types
 
     global_id_field :id
 
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: true
     field :permalink, String, null: true
     field :title, String, null: true
     field :description, String, null: true
     field :version_number, String, null: true
+    field :downloads, Integer, null: true
 
     field :user, Types::UserType, null: true
     def user
