@@ -2,7 +2,7 @@
 
 module Types
   class ProjectSort < Types::BaseEnum
-    value 'created_at'
-    value 'downloads'
+    value 'CREATION_TIME', value: :created_at
+    value 'DOWNLOADS', value: :downloads
   end
 end

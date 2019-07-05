@@ -2,7 +2,7 @@
 
 module Types
   class SortDirection < Types::BaseEnum
-    value 'asc', 'sort by ascending order'
-    value 'desc', 'sort by descending order'
+    value 'ASC', value: :asc, description: 'sort by ascending order'
+    value 'DESC', value: :desc, description: 'sort by descending order'
   end
 end
