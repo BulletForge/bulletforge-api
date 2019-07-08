@@ -14,13 +14,4 @@ class Project < ApplicationRecord
   # acts_as_taggable_on :tags
 
   validates_presence_of :title, message: 'Title is required.'
-  validates_presence_of :version_number, message: 'Version number is required.'
-
-  def self.most_downloaded
-    joins(:archive).publically_viewable.order('downloads DESC').limit(5)
-  end
-
-  def self.latest
-    joins(:archive).publically_viewable.order('created_at DESC').limit(5)
-  end
 end
