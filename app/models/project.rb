@@ -8,8 +8,16 @@ class Project < ApplicationRecord
   belongs_to :user
   belongs_to :category
   belongs_to :danmakufu_version
-  has_many   :images,  as: :attachable, dependent: :destroy
-  has_one    :archive, as: :attachable, dependent: :destroy
+
+  has_many :legacy_images,
+           as: :attachable,
+           class_name: 'Image',
+           dependent: :destroy
+
+  has_one :legacy_archive,
+          as: :attachable,
+          class_name: 'Archive',
+          dependent: :destroy
 
   # acts_as_taggable_on :tags
 

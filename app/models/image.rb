@@ -1,20 +1,12 @@
 # frozen_string_literal: true
 
-class Image < Asset
-  # has_attached_file :attachment,
-  #   :styles => {
-  #     :normal => "400x300>",
-  #     :thumb => "160x120>"
-  #   },
-  #   :storage => :s3,
-  #   :s3_credentials => {
-  #     :access_key_id     => S3SwfUpload::S3Config.access_key_id,
-  #     :secret_access_key => S3SwfUpload::S3Config.secret_access_key,
-  #     :bucket => S3SwfUpload::S3Config.bucket
-  #   },
-  #   :path => "/images/:id/:style.:extension"
+# Legacy image class, read only
+class Image < LegacyAsset
+  def s3_key(style = :normal)
+    "images/#{id}/#{style}.#{file_extension}"
+  end
 
-  # def url(style=:normal)
-  #   attachment.url(style).gsub("http://", "https://")
-  # end
+  def url(style = :normal)
+    "https://s3.amazonaws.com/#{s3_bucket}/#{s3_key(style)}"
+  end
 end
