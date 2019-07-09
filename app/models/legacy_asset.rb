@@ -5,7 +5,8 @@ class LegacyAsset < ApplicationRecord
   belongs_to :attachable, polymorphic: true
   delegate :user, to: :attachable
 
-  before_save :deprecated
+  before_save    :deprecated
+  before_destroy :deprecated
 
   def file_extension
     attachment_file_name.split('.').last
@@ -17,6 +18,6 @@ class LegacyAsset < ApplicationRecord
   end
 
   def deprecated
-    raise 'Creating and updating legacy assets is deprecated'
+    raise 'Creating, updating, and destroying legacy assets is deprecated'
   end
 end
