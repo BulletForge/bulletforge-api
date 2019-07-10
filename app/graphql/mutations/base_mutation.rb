@@ -70,13 +70,5 @@ module Mutations
         message: 'You are not authorized to perform this action.'
       }
     end
-
-    def required_arg_error(arg)
-      arg = arg.to_s.camelize(:lower)
-      {
-        path: ['input', arg],
-        message: arg + ' is a required input'
-      }
-    end
   end
 end
