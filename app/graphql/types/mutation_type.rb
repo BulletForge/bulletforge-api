@@ -10,8 +10,11 @@ module Types
     field :update_user, mutation: Mutations::UpdateUser
     field :destroy_user, mutation: Mutations::DestroyUser
 
-    # User Sessions
+    # User sessions
     field :register, mutation: Mutations::Register
     field :login, mutation: Mutations::Login
+
+    # Direct upload
+    field :create_direct_upload, mutation: Mutations::CreateDirectUpload
   end
 end
