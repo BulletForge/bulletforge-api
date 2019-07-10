@@ -8,6 +8,8 @@ class Project < ApplicationRecord
   belongs_to :user
   belongs_to :category
   belongs_to :danmakufu_version
+  has_many_attached :images
+  has_one_attached :archive
 
   has_many :legacy_images,
            as: :attachable,

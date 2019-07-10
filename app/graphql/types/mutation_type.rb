@@ -14,6 +14,10 @@ module Types
     field :register, mutation: Mutations::Register
     field :login, mutation: Mutations::Login
 
+    # Projects
+    field :attach_project_archive, mutation: Mutations::AttachProjectArchive
+    # field :attach_project_image, mutation: Mutations::AttachProjectImage
+
     # Direct upload
     field :create_direct_upload, mutation: Mutations::CreateDirectUpload
   end
