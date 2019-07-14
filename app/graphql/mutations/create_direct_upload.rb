@@ -8,9 +8,9 @@ module Mutations
     null true
 
     argument :filename, String, 'Original file name', required: true
-    argument :byte_size, Integer, 'File size (bytes)', required: true, prepare: :limit_size
     argument :checksum, String, 'MD5 file checksum as base64', required: true
     argument :content_type, String, 'File content type', required: true
+    argument :byte_size, Integer, 'File size (bytes)', required: true
 
     field :direct_upload, Types::DirectUploadType, null: true
     field :errors, [Types::UserErrorType], null: false
@@ -49,17 +49,6 @@ module Mutations
 
     def error_response
       { direct_upload: nil }.merge(super)
-    end
-
-    def limit_size(byte_size)
-      user_errors << file_too_large_error if byte_size > FILE_SIZE_LIMIT
-    end
-
-    def file_too_large_error
-      {
-        path: %w[input byteSize],
-        message: ["file cannot be larger than #{FILE_SIZE_LIMIT_IN_MB} MB"]
-      }
     end
   end
 end
