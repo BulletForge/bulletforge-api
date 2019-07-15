@@ -38,9 +38,8 @@ module Mutations
     def success_response(blob)
       {
         direct_upload: {
-          url: blob.service_url_for_direct_upload,
-          headers: blob.service_headers_for_direct_upload.to_json,
-          blob_id: blob.id,
+          signed_url: blob.service_url_for_direct_upload,
+          headers: blob.service_headers_for_direct_upload,
           signed_blob_id: blob.signed_id
         },
         errors: []
