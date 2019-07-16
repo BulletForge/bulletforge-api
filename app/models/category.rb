@@ -3,9 +3,7 @@
 class Category < ApplicationRecord
   has_many :projects
 
-  def self.select_array
-    all.collect do |cat|
-      [cat.name, cat.id]
-    end
+  def name_as_enum
+    name.upcase.gsub(/[ .-]+/, '_')
   end
 end

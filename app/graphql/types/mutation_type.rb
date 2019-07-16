@@ -16,6 +16,7 @@ module Types
 
     # Projects
     field :create_draft_project, mutation: Mutations::CreateDraftProject
+    field :update_project, mutation: Mutations::UpdateProject
 
     # Direct upload
     field :create_direct_upload, mutation: Mutations::CreateDirectUpload

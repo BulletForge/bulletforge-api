@@ -3,9 +3,7 @@
 class DanmakufuVersion < ApplicationRecord
   has_many :projects
 
-  def self.select_array
-    all.collect do |ver|
-      [ver.name, ver.id]
-    end
+  def name_as_enum
+    'V_' + name.upcase.gsub('.', '_')
   end
 end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AttachProjectArchivePolicy
+class UpdateProjectPolicy
   attr_reader :current_user, :project
 
   def initialize(current_user, project)

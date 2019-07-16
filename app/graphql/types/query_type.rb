@@ -20,8 +20,8 @@ module Types
     end
 
     field :projects, Types::ProjectType.connection_type, null: false do
-      argument :sort_by, Types::ProjectSort, required: false
-      argument :sort_direction, Types::SortDirection, required: false
+      argument :sort_by, Types::ProjectSortEnum, required: false
+      argument :sort_direction, Types::SortDirectionEnum, required: false
     end
     def projects(sort_by: :created_at, sort_direction: :desc)
       Project.order(sort_by => sort_direction)
