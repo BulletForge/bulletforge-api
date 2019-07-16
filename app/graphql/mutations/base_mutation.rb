@@ -45,16 +45,20 @@ module Mutations
       context[:current_user] = User.find(context[:current_user_id])
     end
 
+    def add_model_errors(model)
+      model.errors.each do |attribute, message|
+        attribute = attribute.to_s.camelize(:lower)
+        user_errors << {
+          path: ['input', attribute.to_s.camelize(:lower)],
+          message: attribute + ' ' + message
+        }
+      end
+    end
+
     def user_errors
       return @user_errors if @user_errors
 
       @user_errors = []
-    end
-
-    def error_response
-      {
-        errors: user_errors
-      }
     end
 
     def require_login_error

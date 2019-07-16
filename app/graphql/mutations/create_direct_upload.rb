@@ -2,9 +2,6 @@
 
 module Mutations
   class CreateDirectUpload < Mutations::BaseMutation
-    FILE_SIZE_LIMIT_IN_MB = 300
-    FILE_SIZE_LIMIT = FILE_SIZE_LIMIT_IN_MB.megabytes
-
     null true
 
     argument :filename, String, 'Original file name', required: true
@@ -21,33 +18,33 @@ module Mutations
     end
 
     def resolve(filename:, byte_size:, checksum:, content_type:)
-      return error_response unless user_errors.empty?
-
-      blob = ActiveStorage::Blob.create_before_direct_upload!(
-        filename: filename,
-        byte_size: byte_size,
-        checksum: checksum,
-        content_type: content_type
-      )
-
+      blob = create_blob(filename, byte_size, checksum, content_type)
       success_response(blob)
     end
 
     private
 
+    def create_blob(filename, byte_size, checksum, content_type)
+      ActiveStorage::Blob.create_before_direct_upload!(
+        filename: filename,
+        byte_size: byte_size,
+        checksum: checksum,
+        content_type: content_type
+      )
+    end
+
     def success_response(blob)
       {
-        direct_upload: {
-          signed_url: blob.service_url_for_direct_upload,
-          headers: blob.service_headers_for_direct_upload,
-          signed_blob_id: blob.signed_id
-        },
+        direct_upload: blob,
         errors: []
       }
     end
 
     def error_response
-      { direct_upload: nil }.merge(super)
+      {
+        direct_upload: nil,
+        errors: user_errors
+      }
     end
   end
 end

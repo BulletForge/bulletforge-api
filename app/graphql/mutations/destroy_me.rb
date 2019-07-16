@@ -14,17 +14,23 @@ module Mutations
 
     def resolve
       context[:current_user].destroy
+      success_response
+    end
 
+    private
+
+    def success_response
       {
         success: true,
         errors: []
       }
     end
 
-    private
-
     def error_response
-      { success: false }.merge(super)
+      {
+        success: false,
+        errors: user_errors
+      }
     end
   end
 end

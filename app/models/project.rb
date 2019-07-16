@@ -3,7 +3,7 @@
 class Project < ApplicationRecord
   extend FriendlyId
 
-  friendly_id :login, use: :slugged, slug_column: :permalink
+  friendly_id :title, use: :slugged, slug_column: :permalink
 
   belongs_to :user
   belongs_to :category

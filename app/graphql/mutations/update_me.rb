@@ -19,31 +19,29 @@ module Mutations
 
     def resolve(**args)
       user = context[:current_user]
+
       if user.update(args)
-        {
-          user: user,
-          errors: []
-        }
+        success_response(user)
       else
-        add_errors(user)
+        add_model_errors(user)
         error_response
       end
     end
 
     private
 
-    def error_response
-      { user: nil }.merge(super)
+    def success_response(user)
+      {
+        user: user,
+        errors: []
+      }
     end
 
-    def add_errors(user)
-      user.errors.each do |attribute, message|
-        attribute = attribute.to_s.camelize(:lower)
-        user_errors << {
-          path: ['input', attribute.to_s.camelize(:lower)],
-          message: attribute + ' ' + message
-        }
-      end
+    def error_response
+      {
+        user: nil,
+        errors: user_errors
+      }
     end
   end
 end

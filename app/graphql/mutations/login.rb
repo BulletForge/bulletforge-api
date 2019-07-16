@@ -12,15 +12,9 @@ module Mutations
 
     def resolve(login:, password:)
       user = User.find_for_authentication(login: login)
-      is_valid_for_auth = user&.valid_for_authentication? do
-        user.valid_password?(password)
-      end
 
-      if is_valid_for_auth
-        {
-          token: JsonWebToken.encode(user_id: user.id),
-          errors: []
-        }
+      if valid_for_auth?(user, password)
+        success_response(user)
       else
         user_errors << login_error
         error_response
@@ -29,8 +23,24 @@ module Mutations
 
     private
 
+    def valid_for_auth?(user, password)
+      user&.valid_for_authentication? do
+        user.valid_password?(password)
+      end
+    end
+
+    def success_response(user)
+      {
+        token: JsonWebToken.encode(user_id: user.id),
+        errors: []
+      }
+    end
+
     def error_response
-      { token: nil }.merge(super)
+      {
+        token: nil,
+        errors: user_errors
+      }
     end
 
     def login_error

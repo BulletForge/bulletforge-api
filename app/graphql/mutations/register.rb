@@ -13,38 +13,39 @@ module Mutations
     field :errors, [Types::UserErrorType], null: false
 
     def resolve(login:, email:, password:, password_confirmation:)
-      user = User.new(
-        login: login,
-        email: email,
-        password: password,
-        password_confirmation: password_confirmation
-      )
+      user = new_user(login, email, password, password_confirmation)
 
       if user.save
-        {
-          user: user,
-          errors: []
-        }
+        success_response(user)
       else
-        add_errors(user)
+        add_model_errors(user)
         error_response
       end
     end
 
     private
 
-    def error_response
-      { user: nil }.merge(super)
+    def new_user(login, email, password, password_confirmation)
+      User.new(
+        login: login,
+        email: email,
+        password: password,
+        password_confirmation: password_confirmation
+      )
     end
 
-    def add_errors(user)
-      user.errors.each do |attribute, message|
-        attribute = attribute.to_s.camelize(:lower)
-        user_errors << {
-          path: ['input', attribute.to_s.camelize(:lower)],
-          message: attribute + ' ' + message
-        }
-      end
+    def success_response(user)
+      {
+        user: user,
+        errors: []
+      }
+    end
+
+    def error_response
+      {
+        user: nil,
+        errors: user_errors
+      }
     end
   end
 end
