@@ -18,12 +18,10 @@ module Mutations
     end
 
     def resolve(**args)
-      user = context[:current_user]
-
-      if user.update(args)
-        success_response(user)
+      if current_user.update(args)
+        success_response(current_user)
       else
-        add_model_errors(user)
+        add_model_errors(current_user)
         error_response
       end
     end

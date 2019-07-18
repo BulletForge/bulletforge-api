@@ -13,7 +13,7 @@ module Mutations
     end
 
     def resolve
-      context[:current_user].destroy
+      current_user.destroy
       success_response
     end
 

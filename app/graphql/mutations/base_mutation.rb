@@ -21,58 +21,50 @@ module Mutations
     end
 
     def require_login
-      user_errors << require_login_error unless logged_in?
-    end
-
-    def required_arguments(args:, required:)
-      required.each do |required_arg|
-        user_errors << required_arg_error(required_arg) if args[required_arg].nil?
-      end
+      add_require_login_error unless current_user
     end
 
     def authorize(policy)
-      user_errors << unauthorized_error unless policy.authorized?
+      add_unauthorized_error unless policy.authorized?
     end
 
-    def logged_in?
-      load_current_user
-      context[:current_user]
+    def current_user
+      context[:current_user] || load_current_user
     end
 
     def load_current_user
-      return if context[:current_user] || !context[:current_user_id]
+      return unless context[:current_user_id]
 
       context[:current_user] = User.find(context[:current_user_id])
     end
 
     def add_model_errors(model)
       model.errors.each do |attribute, message|
-        attribute = attribute.to_s.camelize(:lower)
-        user_errors << {
-          path: ['input', attribute.to_s.camelize(:lower)],
-          message: attribute + ' ' + message
-        }
+        attr_str = attribute.to_s.camelize(:lower)
+
+        path = ['input', attr_str]
+        msg = attr_str + ' ' + message
+        add_error(path, msg)
       end
     end
 
     def user_errors
-      return @user_errors if @user_errors
-
-      @user_errors = []
+      @user_errors ||= []
     end
 
-    def require_login_error
-      {
-        path: [],
-        message: 'You must be logged in to perform this action.'
+    def add_error(path, message)
+      user_errors << {
+        path: path,
+        message: message
       }
     end
 
-    def unauthorized_error
-      {
-        path: [],
-        message: 'You are not authorized to perform this action.'
-      }
+    def add_require_login_error
+      add_error([], 'You must be logged in to perform this action.')
+    end
+
+    def add_unauthorized_error
+      add_error([], 'You are not authorized to perform this action.')
     end
   end
 end

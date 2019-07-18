@@ -16,7 +16,7 @@ module Mutations
       if valid_for_auth?(user, password)
         success_response(user)
       else
-        user_errors << login_error
+        add_error([], 'Invalid username/password combination')
         error_response
       end
     end
@@ -40,13 +40,6 @@ module Mutations
       {
         token: nil,
         errors: user_errors
-      }
-    end
-
-    def login_error
-      {
-        path: [],
-        message: 'Invalid username/password combination'
       }
     end
   end
