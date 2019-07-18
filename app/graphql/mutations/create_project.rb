@@ -11,7 +11,6 @@ module Mutations
     argument :signed_blob_id, String, required: true
 
     field :project, Types::ProjectType, null: true
-    field :direct_upload, Types::DirectUploadType, null: true
     field :errors, [Types::UserErrorType], null: false
 
     def ready?(**args)
