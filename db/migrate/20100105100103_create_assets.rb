@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateAssets < ActiveRecord::Migration
+class CreateAssets < ActiveRecord::Migration[5.2]
   def self.up
     create_table :assets do |t|
       t.string   :attachment_file_name

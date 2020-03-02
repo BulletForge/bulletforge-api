@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddDownloadCounterToVersions < ActiveRecord::Migration
+class AddDownloadCounterToVersions < ActiveRecord::Migration[5.2]
   def self.up
     add_column :versions, :download_count, :integer, default: 0
   end

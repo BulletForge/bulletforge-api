@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddYouTubeVideoIdToProject < ActiveRecord::Migration
+class AddYouTubeVideoIdToProject < ActiveRecord::Migration[5.2]
   def self.up
     add_column :projects, :youtube_video_id, :string
   end

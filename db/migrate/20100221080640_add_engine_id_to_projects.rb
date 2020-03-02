@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddEngineIdToProjects < ActiveRecord::Migration
+class AddEngineIdToProjects < ActiveRecord::Migration[5.2]
   def self.up
     remove_column :projects, :category
     remove_column :projects, :engine

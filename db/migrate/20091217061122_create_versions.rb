@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateVersions < ActiveRecord::Migration
+class CreateVersions < ActiveRecord::Migration[5.2]
   def self.up
     create_table :versions do |t|
       t.integer  :project_id

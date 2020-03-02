@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class VoteFuMigration < ActiveRecord::Migration
+class VoteFuMigration < ActiveRecord::Migration[5.2]
   def self.up
     create_table :votes, force: true do |t|
       t.boolean    :vote, default: false

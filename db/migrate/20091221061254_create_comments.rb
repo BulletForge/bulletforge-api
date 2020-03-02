@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateComments < ActiveRecord::Migration
+class CreateComments < ActiveRecord::Migration[5.2]
   def self.up
     create_table :comments do |t|
       t.integer :author_id

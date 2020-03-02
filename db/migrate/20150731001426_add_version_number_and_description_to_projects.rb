@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddVersionNumberAndDescriptionToProjects < ActiveRecord::Migration
+class AddVersionNumberAndDescriptionToProjects < ActiveRecord::Migration[5.2]
   def self.up
     add_column :projects, :version_number, :string
     add_column :projects, :description, :text

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RemoveVotes < ActiveRecord::Migration
+class RemoveVotes < ActiveRecord::Migration[5.2]
   def self.up
     drop_table :votes
   end

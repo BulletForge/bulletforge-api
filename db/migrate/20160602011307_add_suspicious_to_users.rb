@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddSuspiciousToUsers < ActiveRecord::Migration
+class AddSuspiciousToUsers < ActiveRecord::Migration[5.2]
   def self.up
     add_column :users, :suspicious, :boolean, default: false
   end

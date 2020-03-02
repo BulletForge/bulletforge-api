@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DropVersions < ActiveRecord::Migration
+class DropVersions < ActiveRecord::Migration[5.2]
   def self.up
     drop_table :versions
   end

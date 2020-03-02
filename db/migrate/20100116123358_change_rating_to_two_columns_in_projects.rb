@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ChangeRatingToTwoColumnsInProjects < ActiveRecord::Migration
+class ChangeRatingToTwoColumnsInProjects < ActiveRecord::Migration[5.2]
   def self.up
     remove_column :projects, :rating
     add_column :projects, :win_votes, :integer, default: 0

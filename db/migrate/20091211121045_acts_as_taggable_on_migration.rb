@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ActsAsTaggableOnMigration < ActiveRecord::Migration
+class ActsAsTaggableOnMigration < ActiveRecord::Migration[5.2]
   def self.up
     create_table :tags do |t|
       t.column :name, :string

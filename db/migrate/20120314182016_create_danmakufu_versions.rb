@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateDanmakufuVersions < ActiveRecord::Migration
+class CreateDanmakufuVersions < ActiveRecord::Migration[5.2]
   def self.up
     create_table :danmakufu_versions do |t|
       t.string   :name
