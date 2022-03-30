@@ -13,7 +13,7 @@ gem 'graphql'
 gem 'graphql-batch'
 gem 'jwt'
 gem 'pg'
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 4.3'
 gem 'rack-cors'
 gem 'rails', '~> 5.2.3'
 
